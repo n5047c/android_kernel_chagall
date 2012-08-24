@@ -137,6 +137,7 @@ struct nvmap_handle_ref *nvmap_duplicate_handle_id(struct nvmap_client *client,
 						   unsigned long id);
 struct nvmap_handle_ref *_nvmap_duplicate_handle_id(struct nvmap_client *client,
 						   unsigned long id);
+int nvmap_mark_global(struct nvmap_client *client, struct nvmap_handle_ref *r);
 
 int nvmap_pin_array(struct nvmap_client *client,
 		unsigned long	 *ids,
