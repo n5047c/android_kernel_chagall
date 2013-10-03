@@ -232,4 +232,5 @@ beta14
     video: tegra: host: Boot MSENC at init
     video: tegra: fb: initialize mode width and height
     video: tegra: update cmu_enable on sysfs write
+    video: tegra: nvmap: expose a few nvmap interfaces for RM
     
