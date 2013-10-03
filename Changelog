@@ -233,4 +233,5 @@ beta14
     video: tegra: fb: initialize mode width and height
     video: tegra: update cmu_enable on sysfs write
     video: tegra: nvmap: expose a few nvmap interfaces for RM
+    video: tegra: fix error dereferencing pointer to incomplete type
     
