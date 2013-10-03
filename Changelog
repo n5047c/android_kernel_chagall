@@ -1,0 +1,226 @@
+test18
+    Added optimized ARM RWSEM algorithm
+    cpuidle: fix error handling in __cpuidle_register_device 
+    sys_getppid: add missing rcu_dereference
+    lockdep: fix oops in processing workqueue
+    timer: Optimise apply_slack() for size and speed.
+    timer: Setup uninitialized timer with a stub callback
+    timer: Use debugobjects to catch deletion of uninitialized timers
+    timers: Create detach_if_pending() and use it
+    timers: Consolidate base->next_timer update
+    timers: Add accounting of non deferrable timers
+    timers: Improve get_next_timer_interrupt()
+    timer: Generalize timer->base flags handling
+    timer: Clean up timer initializers
+    timer: Implement TIMER_IRQSAFE
+
+test19
+    sync updates to lib/lzo - by Keff
+    ARM: 7583/1: decompressor: Enable unaligned memory access for v6 and above
+    Add Random Tweaks
+    staging: Add Snappy compression library (v3)
+
+test20
+    locking, rwsem: Annotate inner lock as raw
+    rwsem-spinlock: Implement writer lock-stealing for better scalability
+    rwsem: Implement writer lock-stealing for better scalability
+    rwsem: make the waiter type an enumeration rather than a bitmask
+    rwsem: shorter spinlocked section in rwsem_down_failed_common()
+    rwsem: move rwsem_down_failed_common code into rwsem_down_{read,write}_failed
+    rwsem: simplify rwsem_down_read_failed
+    rwsem: simplify rwsem_down_write_failed
+    rwsem: more agressive lock stealing in rwsem_down_write_failed
+    rwsem: use cmpxchg for trying to steal write lock
+    rwsem: avoid taking wait_lock in rwsem_down_write_failed
+    rwsem: skip initial trylock in rwsem_down_write_failed
+    rwsem: simplify __rwsem_do_wake
+    rwsem: implement support for write lock stealing on the fastpath
+    rwsem: do not block readers at head of queue if other readers are active
+    rwsem: no need for explicit signed longs
+    rwsem: check counter to avoid cmpxchg calls
+    fs/dyn_sync_cntrl: favor true case since most will be using this feature
+    lib: improve the performance of memcpy and memmove of the general version
+    binfmt_elf.c: use get_random_int() to fix entropy depleting
+    lib: introduce some memory copy macros and functions
+
+test21
+    logger: Add an enable toggle for entry storage
+    ARM: fix warning on uninitialized offset.un
+    Asynchronous I/O latency to a solid-state disk greatly increased
+    ARM: Add optimised swahb32() byteswap helper for v6 and above
+    tmpfs: fix mempolicy object leaks
+    lib/string.c: introduce memchr_inv()
+    lib: add error checking to hex2bin
+    procfs: add num_to_str() to speed up /proc/stat
+    lib: rename pack_hex_byte() to hex_byte_pack()
+    decompressors: add lz4 decompressor module
+    lib: add support for LZ4-compressed kernels
+    Add lz4 binary
+    Ported Snappy-C version 1.1.0
+    lib: add lz4 compressor module
+    lib: strncpy_from_user & strnlen_user
+    lib: Fix generic strnlen_user for 32-bit big-endian machines
+    kernel: Move REPEAT_BYTE definition into linux/kernel.h
+
+test22
+    mm: decrease default dirty ratio
+    mm: Optimized SLUB memory allocator
+    mm: Added filesystem dynamic read-ahead (Credits to Chad Gooldman)
+    PM / Sleep: Look for wakeup events in later stages of device suspend
+    PM / Sleep: Use wait queue to signal "no wakeup events in progress"
+    PM / Sleep: Change wakeup source statistics to follow Android
+    PM / Sleep: Add wakeup_source_activate and wakeup_source_deactivate tracepoints
+    PM / Sleep: Print name of wakeup source that aborts suspend
+    PM: Add watchdog to catch lockup during device resume
+    wakeup: Use irqsave/irqrestore for events_lock
+    freezer: skip waking up tasks with PF_FREEZER_SKIP set
+
+    USB: gadget: Cleanup boot-up message with default usb composition
+    Bluetooth: Fix for the l2cap layer crashes while turning OFF BT
+    Enable setting security contexts on rootfs inodes.
+    [PATCH 1/3] Rename ARM assembler push/pull macros
+    [PATCH 2/3] Optimize copy_page for modern ARM platforms
+    ARM: 7668/1: fix memset-related crashes caused by recent GCC (4.7.2) optimizations
+    ARM: 7670/1: fix the memset fix
+    [PATCH 3/3] Optimize ARM memset and memzero functions
+    deadline: Allow 0ms deadline latency, increase the read speed
+    fs/dcache.c: adaptive vfs_cache_pressure on suspend / resume
+    cache_pressure despite the dynamic suspend/resume values
+
+test23
+    patch: fix compiling with linaro gcc 4.7.4
+    mm: Fix incorrect cache attribute restoration.
+    tegra_pcm: support audio up to 32bits
+    ARM: tegra: lp0 WAKE2 status clear
+    video: tegra: host: Fix section mismatches
+    video: tegra: host: use strcmp in nvhost_bus_match
+    video: tegra: host: Disable host1x irqs at suspend
+    video: tegra: nvmap: Add support for zeroed pages
+    video: tegra: host: Fix leak in 3D register read
+    video: tegra: nvmap: Add sanity checks for page pools
+    video: tegra: nvmap: Fix overflow in nvmap_heap
+    video: tegra: host: Fix crash if allocation fails
+    video: tegra: host: Fix freeing a ERR_PTR value
+    video: tegra: dc: Make framebuffer console init OK
+    video: tegra: host: Clear intr list at intr_put
+    patch: update graphic drivers
+    arch: arm: pcie: init TXBA registers
+    media: video: tegra: Don't overwrite avp outbox
+    video: tegra: host: new syncpoint max interface
+    arm: tegra: pcie: Fix Coverity issue
+    usb: serial: fix redefinition warnings
+    arm: tegra: usb_phy: fix null pointer dereference
+    usb: gadget: tegra_udc: Enable DR IRQ in udc_start
+    usb: gadget: tegra: remove unnecessary bus resume
+    android: logger: enforce GID and CAP check on log flush
+    tty: serial: tegra: check function's return value
+
+    arm: tegra3: gpu oc to 564mhz for use with stock voltage
+
+    video: tegra: nvmap: Add config to fill page pools at init.
+    patch to 3.1.10-8580daa
+    patch: remove TREE_RCU depency from RCU_FAST_NO_HZ
+    video: tegra: 3d register read patch (see commit msg)
+    arm: tegra: remove cpu linear offset age
+    patch: optimize kernel for cortex-a9
+    
+    kref: fix up the kfree build problems
+    oom: remove oom_disable_count
+    irq: don't put module.h into irq.h for tracking irqgen modules.
+    mm: distinguish between mlocked and pinned pages
+
+beta12.3
+    arm: tegra: tripndroid dvfs patches v1
+    video: tegra: validate some nvmap handling
+    rcu: add jrcu for small smp systems
+    arm: tegra3: reset pll lock detect circuit
+    video: tegra: change to rate requests per clock
+    video: tegra: fix empty name for undefined syncpts
+    video: tegra: use workqueues in syncpoint isr
+    mmc: disable use_spi_crc
+    block: improve deadline i/o scheduler for android
+    patch: raise cpu floor when display is on
+    arm: tegra: fix array compared to NULL has no effect
+
+beta13
+    arm: tegra: check per device how much current is supported for pmu
+    video: tegra: host: Support multiple mem types
+    video: tegra: clean up memory alloc code paths
+    video: tegra: implement sg_table using DMA addresses
+    video: tegra: host: Pin each gather only once
+    video: tegra: host: Add dmabuf support
+    patch: add dma buffer support
+    video: tegra: disable sync points
+    timekeeping: Fix time moving backwards
+    video: tegra: host: Set submit timeout to 10s
+
+beta13.1
+    video: tegra: use module id from hw headers
+    video: tegra: add header for defining classids
+    video: tegra: also use hw headers for methods
+    video: tegra: fix deallocate job and NULL check
+    input: define KEY_APP_SWITCH
+    video: tegra: fix panel init sequence
+    video: tegra: host: add per device module-reg-read-write ioctl
+    video: tegra: nvmap: Introduce dma-buf exporter
+    scatterlist: add sg_alloc_table_from_pages
+    video: tegra: nvmap: fix cache_maint leak
+    video: tegra: nvmap: fix pinning unalloc'd handles
+    video: tegra: nvmap: Add pin, unpin trace events
+    video: tegra: remove unsigned variable comparison with zero
+    video: tegra: backport tegra 4 SCAN_COLUMN support
+    video: tegra: enable cp with global alpha
+    video: tegra: implement 2d power gating
+    video: tegra: introduce CMU support from tegra 4
+    video: tegra: dc: fix swap of window output dimensions
+    video: tegra: dont use vi client when also using tegra V4L2
+    video: tegra: add a function to release resources
+    video: tegra: nvmap: Add support for nvmap_kmap
+    video: tegra: host: Map cmdbuf using nvmap_kmap
+    video: tegra: add the cmu interface
+    video: tegra: nvmap: implement fast api functions
+    video: tegra: dc: Fix computation of h offset
+    video: tegra: optimize nvhost pin operations
+    drivers: video: tegra: dc: Expose HBR capability
+    PM: Drop generic_subsys_pm_ops
+    video: tegra: fix EOT packet length
+    video: tegra: remove dummy devices for display & dsi
+    video: tegra: fix shift clk divider
+    video: tegra: dc: remove log spam on mode change
+    tegra: dc: hdmi: Add 720p CVT mode
+    video: tegra: nvmap: Clean up fast_cache_maint()
+    video: tegra: host: Fix error handling of reg read
+    arm: mm: cpa: configurable cache_maint_{inner,outer}_threshold
+    video: tegra: nvmap: Configurable cache_maint_{inner,outer}_threshold
+    video: tegra: allow r/w of cmu_enable sysfs node
+    video: tegra: Select BACKLIGHT_CLASS_DEVICE (smartdimmer depends on this)
+    video: tegra: add Tegra MSENC module support
+    video: tegra: backport Tegra SD Gen2 support from Tegra 4
+    board-chagall-panel: add Tegra SD Gen2 support
+    video: tegra: host: Fix resource leak
+    video: tegra: enable 2D power gating
+    video: tegra: host: Skip dmabuf handles in nvmap
+    video: tegra: nvmap: Return error for re-allocation request.
+    video: tegra: nvmap: Fix heap compactor under OOM
+    video: tegra: dc: remove HDMI mode restrictions
+    video: tegra: host: Fix resource leak on error
+    video: tegra: host: handle function return value
+    video: tegra: add ioctl to expose CMU
+    android: logger: free some more ram
+    mmc: decrease wakelock timeout
+    tegra3_clocks: stop filling our logs
+    video: tegra: dc: power host1x during HDCP link
+    video: tegra: fix memory leak on pin
+    video: tegra: host: Compress debug dump
+    video: tegra: wait for idle before regread
+    video: tegra: move crc messages to dev_dbg
+    video: tegra: new job submit interface
+    video: tegra: fix memory leak in dmabuf
+    cpufreq: add input-cfboost
+    input-cfboost: improve boost latency
+    input-cfboost: monitor keypad & joystick events
+    input: add MSC_ACTIVITY event for reporting early input activity
+    driver-core/cpu: Expose hotpluggability to the rest of the kernel
+    lib: devres: add convenience function to remap a resource
+    devtmpfsd: fix task state handling
+    
