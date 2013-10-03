@@ -231,4 +231,5 @@ beta14
     SPI: Add helper macro for spi_driver boilerplate
     video: tegra: host: Boot MSENC at init
     video: tegra: fb: initialize mode width and height
+    video: tegra: update cmu_enable on sysfs write
     
