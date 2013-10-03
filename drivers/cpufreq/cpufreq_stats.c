@@ -11,7 +11,6 @@
 
 #include <linux/kernel.h>
 #include <linux/slab.h>
-#include <linux/sysdev.h>
 #include <linux/cpu.h>
 #include <linux/sysfs.h>
 #include <linux/cpufreq.h>
@@ -175,10 +174,8 @@ static int freq_table_get_index(struct cpufreq_stats *stat, unsigned int freq)
  */
 static void cpufreq_stats_free_table(unsigned int cpu)
 {
-	struct cpufreq_stats *stat;
-
 	spin_lock(&cpufreq_stats_lock);
-	stat = per_cpu(cpufreq_stats_table, cpu);
+	struct cpufreq_stats *stat = per_cpu(cpufreq_stats_table, cpu);
 	per_cpu(cpufreq_stats_table, cpu) = NULL;
 	spin_unlock(&cpufreq_stats_lock);
 
