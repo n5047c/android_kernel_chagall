@@ -229,4 +229,5 @@ beta14
     cpu: convert 'cpu' and 'machinecheck' sysdev_class to a regular subsystem
     lib: devres: add annotations for #endif
     SPI: Add helper macro for spi_driver boilerplate
+    video: tegra: host: Boot MSENC at init
     
