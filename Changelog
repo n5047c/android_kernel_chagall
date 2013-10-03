@@ -235,4 +235,5 @@ beta14
     video: tegra: nvmap: expose a few nvmap interfaces for RM
     video: tegra: fix error dereferencing pointer to incomplete type
     USB: Add helper macro for usb_driver boilerplate
+    USB: convert drivers/usb/* to use module_usb_driver()
     
