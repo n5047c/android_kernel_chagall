@@ -237,4 +237,5 @@ beta14
     USB: Add helper macro for usb_driver boilerplate
     USB: convert drivers/usb/* to use module_usb_driver()
     USB: convert drivers/net/* to use module_usb_driver()
+    USB: convert drivers/bluetooth/* to use module_usb_driver()
     
