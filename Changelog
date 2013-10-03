@@ -230,4 +230,5 @@ beta14
     lib: devres: add annotations for #endif
     SPI: Add helper macro for spi_driver boilerplate
     video: tegra: host: Boot MSENC at init
+    video: tegra: fb: initialize mode width and height
     
