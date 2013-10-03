@@ -223,4 +223,7 @@ beta13.1
     driver-core/cpu: Expose hotpluggability to the rest of the kernel
     lib: devres: add convenience function to remap a resource
     devtmpfsd: fix task state handling
+
+beta14
+    driver-core: implement 'sysdev' functionality for regular devices and buses
     
