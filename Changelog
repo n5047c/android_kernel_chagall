@@ -278,4 +278,5 @@ beta14
     kernel: params.c needs module.h not moduleparam.h
     kernel: fix up module header handling in rcutiny files
     kernel: Fix files explicitly needing EXPORT_SYMBOL infrastructure
+    stop_machine: make stop_machine safe and efficient to call early
     
