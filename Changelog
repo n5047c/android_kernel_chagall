@@ -323,4 +323,5 @@ beta14
     vmscan: add barrier to prevent evictable page in unevictable list
     vmscan: limit direct reclaim for higher order allocations
     vmscan: abort reclaim/compaction if compaction can proceed
+    mm: do not drain pagevecs for mlockall(MCL_FUTURE)
     
