@@ -302,4 +302,5 @@ beta14
     thp: mremap support and TLB optimization
     include/asm-generic/page.h: calculate virt_to_page and page_to_virt via predefined macro
     mm: neaten warn_alloc_failed
+    debug-pagealloc: add support for highmem pages
     
