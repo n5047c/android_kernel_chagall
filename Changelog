@@ -260,4 +260,5 @@ beta14
     clockevents: Set noop handler in clockevents_exchange_device()
     tracing: Restore system filter behavior
     ftrace: Fix hash record accounting bug
+    lockdep, bug: Exclude TAINT_FIRMWARE_WORKAROUND from disabling lockdep
     
