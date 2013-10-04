@@ -247,4 +247,5 @@ beta14
     debugfs: bugfix: include <linux/io.h> in file.c
     debugfs: remove unneeded cast in debugfs_print_regs32()
     topology: Provide CPU topology in sysfs in !SMP configurations
+    driver-core: skip uevent generation when nobody is listening
     
