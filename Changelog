@@ -266,4 +266,5 @@ beta14
     ARM: enable ARM_PATCH_PHYS_VIRT by default
     ARM: 7013/1: P2V: Remove ARM_PATCH_PHYS_VIRT_16BIT
     ARM: hw_breakpoint: reduce the number of WARN_ONCE invocations
+    genirq: Add IRQCHIP_SKIP_SET_WAKE flag
     
