@@ -249,4 +249,5 @@ beta14
     kref: Inline all functions
     kref: Implement kref_put in terms of kref_sub
     kref: Remove the memory barriers
+    kref: fix up the kfree build problems
     
