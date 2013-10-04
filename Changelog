@@ -316,4 +316,5 @@ beta14
     mm: fix kunmap_high() comment
     vmscan.c: fix invalid strict_strtoul() check in write_scan_unevictable_node()
     mm: disable user interface to manually rescue unevictable pages
+    mm/memblock.c: quiet sparse noise
     
