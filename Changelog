@@ -264,4 +264,5 @@ beta14
     lockdep: Print lock name in lockdep_init_error()
     irq: support domains with non-zero hwirq base
     ARM: enable ARM_PATCH_PHYS_VIRT by default
+    ARM: 7013/1: P2V: Remove ARM_PATCH_PHYS_VIRT_16BIT
     
