@@ -243,3 +243,5 @@ beta14
     USB: convert drivers/input/* to use module_usb_driver()
     USB: convert sound/* to use module_usb_driver()
     debugfs: add tools to printk 32-bit registers
+    debugfs: print_regs32: make regs array a const pointer
+    
