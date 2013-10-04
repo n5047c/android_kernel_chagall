@@ -295,4 +295,5 @@ beta14
     vmscan: count pages into balanced for zone with good watermark
     mm/debug-pagealloc.c: use plain __ratelimit() instead of printk_ratelimit()
     mm/debug-pagealloc.c: use memchr_inv
+    memblock: add memblock_start_of_DRAM()
     
