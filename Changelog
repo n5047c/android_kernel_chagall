@@ -262,4 +262,5 @@ beta14
     ftrace: Fix hash record accounting bug
     lockdep, bug: Exclude TAINT_FIRMWARE_WORKAROUND from disabling lockdep
     lockdep: Print lock name in lockdep_init_error()
+    irq: support domains with non-zero hwirq base
     
