@@ -277,4 +277,5 @@ beta14
     kernel: ksysfs.c is implicitly using stat.h
     kernel: params.c needs module.h not moduleparam.h
     kernel: fix up module header handling in rcutiny files
+    kernel: Fix files explicitly needing EXPORT_SYMBOL infrastructure
     
