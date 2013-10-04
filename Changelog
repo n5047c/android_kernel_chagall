@@ -241,4 +241,5 @@ beta14
     USB: convert drivers/media/* to use module_usb_driver()
     module_param: make bool parameters really bool (drivers & misc)
     USB: convert drivers/input/* to use module_usb_driver()
+    USB: convert sound/* to use module_usb_driver()
     
