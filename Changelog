@@ -288,4 +288,5 @@ beta14
     mm: add comments to explain mm_struct fields
     mm: vmscan: do not writeback filesystem pages in direct reclaim
     mm: vmscan: remove dead code related to lumpy reclaim waiting on pages under writeback
+    ext4: warn if direct reclaim tries to writeback pages
     
