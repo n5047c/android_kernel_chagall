@@ -123,8 +123,6 @@ test23
     video: tegra: 3d register read patch (see commit msg)
     arm: tegra: remove cpu linear offset age
     patch: optimize kernel for cortex-a9
-    
-    kref: fix up the kfree build problems
     oom: remove oom_disable_count
     irq: don't put module.h into irq.h for tracking irqgen modules.
     mm: distinguish between mlocked and pinned pages
@@ -250,4 +248,5 @@ beta14
     driver-core: skip uevent generation when nobody is listening
     kref: Inline all functions
     kref: Implement kref_put in terms of kref_sub
+    kref: Remove the memory barriers
     
