@@ -251,4 +251,5 @@ beta14
     kref: Remove the memory barriers
     kref: fix up the kfree build problems
     edac: convert sysdev_class to a regular subsystem
+    clocksource: convert sysdev_class to a regular subsystem
     
