@@ -310,4 +310,5 @@ beta14
     ksm: fix the comment of try_to_unmap_one()
     mm-add-comment-explaining-task-state-setting-in-bdi_forker_thread-fix fiddle wording
     mm/mmap.c: eliminate the ret variable from mm_take_all_locks()
+    fs/buffer.c: add device information for error output in __find_get_block_slow()
     
