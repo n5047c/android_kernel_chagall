@@ -261,4 +261,5 @@ beta14
     tracing: Restore system filter behavior
     ftrace: Fix hash record accounting bug
     lockdep, bug: Exclude TAINT_FIRMWARE_WORKAROUND from disabling lockdep
+    lockdep: Print lock name in lockdep_init_error()
     
