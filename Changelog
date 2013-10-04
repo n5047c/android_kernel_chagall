@@ -296,4 +296,5 @@ beta14
     mm/debug-pagealloc.c: use plain __ratelimit() instead of printk_ratelimit()
     mm/debug-pagealloc.c: use memchr_inv
     memblock: add memblock_start_of_DRAM()
+    memblock: add NO_BOOTMEM config symbol
     
