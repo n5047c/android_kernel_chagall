@@ -291,4 +291,5 @@ beta14
     ext4: warn if direct reclaim tries to writeback pages
     mm: vmscan: do not writeback filesystem pages in kswapd except in high priority
     mm: vmscan: throttle reclaim if encountering too many dirty pages under writeback
+    mm: vmscan: immediately reclaim end-of-LRU dirty pages when writeback completes
     
