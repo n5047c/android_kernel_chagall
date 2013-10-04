@@ -299,4 +299,5 @@ beta14
     memblock: add NO_BOOTMEM config symbol
     mremap: check for overflow using deltas
     mremap: avoid sending one IPI per page
+    thp: mremap support and TLB optimization
     
