@@ -270,4 +270,5 @@ beta14
     ARM: zImage: ensure it is always a multiple of 64 bits in size
     ARM: zImage: prevent constant copy+rebuild of lib1funcs.S
     range: fix bogus misuse of module.h to get printk()
+    kernel: Map most files to use export.h instead of module.h
     
