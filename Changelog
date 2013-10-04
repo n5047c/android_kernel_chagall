@@ -259,4 +259,5 @@ beta14
     driver core: remove __must_check from device_create_file
     clockevents: Set noop handler in clockevents_exchange_device()
     tracing: Restore system filter behavior
+    ftrace: Fix hash record accounting bug
     
