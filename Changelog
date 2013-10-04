@@ -287,4 +287,5 @@ beta14
     dma-mapping: fix sync_single_range_* DMA debugging
     mm: add comments to explain mm_struct fields
     mm: vmscan: do not writeback filesystem pages in direct reclaim
+    mm: vmscan: remove dead code related to lumpy reclaim waiting on pages under writeback
     
