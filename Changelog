@@ -326,4 +326,5 @@ beta14
     mm: do not drain pagevecs for mlockall(MCL_FUTURE)
     mm/huge_memory: fix copying user highpage
     mm/huge_memory: fix typo when updating mmu cache
+    mm: munlock use mapcount to avoid terrible overhead
     
