@@ -306,4 +306,5 @@ beta14
     kswapd: avoid unnecessary rebalance after an unsuccessful balancing
     mm/memblock.c: small function definition fixes
     kswapd: assign new_order and new_classzone_idx after wakeup in sleeping
+    mm/vmalloc.c: report more vmalloc failures
     
