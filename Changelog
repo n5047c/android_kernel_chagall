@@ -284,4 +284,7 @@ beta14
     printk: add console_suspend module parameter
     printk: fix bounds checking for log_prefix
     printk: remove bounds checking for log_prefix
+    dma-mapping: fix sync_single_range_* DMA debugging
+    mm: add comments to explain mm_struct fields
+    mm: vmscan: do not writeback filesystem pages in direct reclaim
     
