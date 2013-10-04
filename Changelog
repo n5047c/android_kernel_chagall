@@ -320,4 +320,5 @@ beta14
     mm/thrash.c: quiet sparse noise
     mm/mempolicy.c: quiet sparse noise
     mm/huge_memory.c: quiet sparse noise
+    vmscan: add barrier to prevent evictable page in unevictable list
     
