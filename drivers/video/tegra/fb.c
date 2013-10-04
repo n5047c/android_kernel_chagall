@@ -322,6 +322,7 @@ static void tegra_fb_imageblit(struct fb_info *info,
 
 static int tegra_fb_ioctl(struct fb_info *info, unsigned int cmd, unsigned long arg)
 {
+	struct tegra_fb_info *tegra_fb = (struct tegra_fb_info *)info->par;
 	struct tegra_dc *dc = tegra_fb->win->dc;
 	struct tegra_fb_modedb modedb;
 	struct fb_modelist *modelist;
