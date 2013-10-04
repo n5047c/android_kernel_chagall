@@ -279,4 +279,5 @@ beta14
     kernel: fix up module header handling in rcutiny files
     kernel: Fix files explicitly needing EXPORT_SYMBOL infrastructure
     stop_machine: make stop_machine safe and efficient to call early
+    kernel/sysctl.c: add cap_last_cap to /proc/sys/kernel
     
