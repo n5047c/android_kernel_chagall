@@ -312,4 +312,5 @@ beta14
     mm/mmap.c: eliminate the ret variable from mm_take_all_locks()
     fs/buffer.c: add device information for error output in __find_get_block_slow()
     HWPOISON: convert pr_debug()s to pr_info()s
+    mm: compaction: make compact_zone_order() static
     
