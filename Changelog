@@ -317,4 +317,5 @@ beta14
     vmscan.c: fix invalid strict_strtoul() check in write_scan_unevictable_node()
     mm: disable user interface to manually rescue unevictable pages
     mm/memblock.c: quiet sparse noise
+    mm/thrash.c: quiet sparse noise
     
