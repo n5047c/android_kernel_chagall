@@ -313,4 +313,5 @@ beta14
     fs/buffer.c: add device information for error output in __find_get_block_slow()
     HWPOISON: convert pr_debug()s to pr_info()s
     mm: compaction: make compact_zone_order() static
+    mm: fix kunmap_high() comment
     
