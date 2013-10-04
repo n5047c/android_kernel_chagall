@@ -246,4 +246,5 @@ beta14
     debugfs: print_regs32: make regs array a const pointer
     debugfs: bugfix: include <linux/io.h> in file.c
     debugfs: remove unneeded cast in debugfs_print_regs32()
+    topology: Provide CPU topology in sysfs in !SMP configurations
     
