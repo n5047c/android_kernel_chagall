@@ -304,4 +304,5 @@ beta14
     mm: neaten warn_alloc_failed
     debug-pagealloc: add support for highmem pages
     kswapd: avoid unnecessary rebalance after an unsuccessful balancing
+    mm/memblock.c: small function definition fixes
     
