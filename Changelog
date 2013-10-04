@@ -314,4 +314,5 @@ beta14
     HWPOISON: convert pr_debug()s to pr_info()s
     mm: compaction: make compact_zone_order() static
     mm: fix kunmap_high() comment
+    vmscan.c: fix invalid strict_strtoul() check in write_scan_unevictable_node()
     
