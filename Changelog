@@ -293,4 +293,5 @@ beta14
     mm: vmscan: throttle reclaim if encountering too many dirty pages under writeback
     mm: vmscan: immediately reclaim end-of-LRU dirty pages when writeback completes
     vmscan: count pages into balanced for zone with good watermark
+    mm/debug-pagealloc.c: use plain __ratelimit() instead of printk_ratelimit()
     
