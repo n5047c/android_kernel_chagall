@@ -282,4 +282,5 @@ beta14
     kernel/sysctl.c: add cap_last_cap to /proc/sys/kernel
     printk: add module parameter ignore_loglevel to control ignore_loglevel
     printk: add console_suspend module parameter
+    printk: fix bounds checking for log_prefix
     
