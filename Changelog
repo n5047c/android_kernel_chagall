@@ -242,4 +242,4 @@ beta14
     module_param: make bool parameters really bool (drivers & misc)
     USB: convert drivers/input/* to use module_usb_driver()
     USB: convert sound/* to use module_usb_driver()
-    
+    debugfs: add tools to printk 32-bit registers
