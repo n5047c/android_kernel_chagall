@@ -283,4 +283,5 @@ beta14
     printk: add module parameter ignore_loglevel to control ignore_loglevel
     printk: add console_suspend module parameter
     printk: fix bounds checking for log_prefix
+    printk: remove bounds checking for log_prefix
     
