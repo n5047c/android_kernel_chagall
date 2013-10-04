@@ -250,4 +250,5 @@ beta14
     kref: Implement kref_put in terms of kref_sub
     kref: Remove the memory barriers
     kref: fix up the kfree build problems
+    edac: convert sysdev_class to a regular subsystem
     
