@@ -275,4 +275,5 @@ beta14
     kernel: fix several implicit usasges of kmod.h
     kernel: fix two implicit header assumptions in irq_work.c
     kernel: ksysfs.c is implicitly using stat.h
+    kernel: params.c needs module.h not moduleparam.h
     
