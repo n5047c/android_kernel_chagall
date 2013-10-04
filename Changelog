@@ -256,4 +256,5 @@ beta14
     kobject: remove kset_find_obj_hinted()
     arm: leds: convert sysdev_class to a regular subsystem
     debugfs: add missing #ifdef HAS_IOMEM
+    driver core: remove __must_check from device_create_file
     
