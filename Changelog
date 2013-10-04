@@ -238,4 +238,5 @@ beta14
     USB: convert drivers/usb/* to use module_usb_driver()
     USB: convert drivers/net/* to use module_usb_driver()
     USB: convert drivers/bluetooth/* to use module_usb_driver()
+    USB: convert drivers/media/* to use module_usb_driver()
     
