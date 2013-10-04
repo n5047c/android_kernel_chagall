@@ -249,4 +249,5 @@ beta14
     topology: Provide CPU topology in sysfs in !SMP configurations
     driver-core: skip uevent generation when nobody is listening
     kref: Inline all functions
+    kref: Implement kref_put in terms of kref_sub
     
