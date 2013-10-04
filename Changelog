@@ -255,4 +255,5 @@ beta14
     convert 'memory' sysdev_class to a regular subsystem
     kobject: remove kset_find_obj_hinted()
     arm: leds: convert sysdev_class to a regular subsystem
+    debugfs: add missing #ifdef HAS_IOMEM
     
