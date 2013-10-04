@@ -274,4 +274,5 @@ beta14
     kernel: Add <linux/module.h> to files using it implicitly
     kernel: fix several implicit usasges of kmod.h
     kernel: fix two implicit header assumptions in irq_work.c
+    kernel: ksysfs.c is implicitly using stat.h
     
