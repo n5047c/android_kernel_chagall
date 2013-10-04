@@ -294,4 +294,5 @@ beta14
     mm: vmscan: immediately reclaim end-of-LRU dirty pages when writeback completes
     vmscan: count pages into balanced for zone with good watermark
     mm/debug-pagealloc.c: use plain __ratelimit() instead of printk_ratelimit()
+    mm/debug-pagealloc.c: use memchr_inv
     
