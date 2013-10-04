@@ -257,4 +257,5 @@ beta14
     arm: leds: convert sysdev_class to a regular subsystem
     debugfs: add missing #ifdef HAS_IOMEM
     driver core: remove __must_check from device_create_file
+    clockevents: Set noop handler in clockevents_exchange_device()
     
