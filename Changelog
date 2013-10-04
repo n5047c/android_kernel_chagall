@@ -319,4 +319,5 @@ beta14
     mm/memblock.c: quiet sparse noise
     mm/thrash.c: quiet sparse noise
     mm/mempolicy.c: quiet sparse noise
+    mm/huge_memory.c: quiet sparse noise
     
