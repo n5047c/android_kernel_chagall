@@ -253,4 +253,5 @@ beta14
     edac: convert sysdev_class to a regular subsystem
     clocksource: convert sysdev_class to a regular subsystem
     convert 'memory' sysdev_class to a regular subsystem
+    kobject: remove kset_find_obj_hinted()
     
