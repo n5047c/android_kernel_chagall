@@ -300,4 +300,5 @@ beta14
     mremap: check for overflow using deltas
     mremap: avoid sending one IPI per page
     thp: mremap support and TLB optimization
+    include/asm-generic/page.h: calculate virt_to_page and page_to_virt via predefined macro
     
