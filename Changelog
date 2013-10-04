@@ -273,4 +273,5 @@ beta14
     kernel: Map most files to use export.h instead of module.h
     kernel: Add <linux/module.h> to files using it implicitly
     kernel: fix several implicit usasges of kmod.h
+    kernel: fix two implicit header assumptions in irq_work.c
     
