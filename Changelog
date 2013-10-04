@@ -239,4 +239,5 @@ beta14
     USB: convert drivers/net/* to use module_usb_driver()
     USB: convert drivers/bluetooth/* to use module_usb_driver()
     USB: convert drivers/media/* to use module_usb_driver()
+    module_param: make bool parameters really bool (drivers & misc)
     
