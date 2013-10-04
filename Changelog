@@ -245,4 +245,5 @@ beta14
     debugfs: add tools to printk 32-bit registers
     debugfs: print_regs32: make regs array a const pointer
     debugfs: bugfix: include <linux/io.h> in file.c
+    debugfs: remove unneeded cast in debugfs_print_regs32()
     
