@@ -358,4 +358,5 @@ beta14.2
     mmc: wakeup panic fix aka sdio_irq_thread
     block: tweak deadline scheduler a little harder
     block: elevator: add elevator_queue_empty_fn
+    mmc: core: fix possbile memory leak
     
