@@ -377,4 +377,5 @@ beta14.2
     video: tegra: fix compiling with cmu disabled
     video: tegra: fix dc clk enable/disable
     fb: fix reserved usage for android 4.2
+    arm: tegra: clock: replace clock lock with spinlock
     
