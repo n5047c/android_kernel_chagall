@@ -373,4 +373,5 @@ beta14.2
     cpufreq: Resolve CPUFREQ_NOTIFY issue
     sched: smart wake-affine
     memcg: replace ss->id_lock with a rwlock
+    sched, rt: Provide means of disabling cross-cpu bandwidth sharing
     
