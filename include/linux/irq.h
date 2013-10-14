@@ -566,6 +566,8 @@ int __irq_alloc_descs(int irq, unsigned int from, unsigned int cnt, int node,
 #define irq_alloc_desc_from(from, node)		\
 	irq_alloc_descs(-1, from, 1, node)
 
+void irq_free_descs(unsigned int irq, unsigned int cnt);
+int irq_reserve_irqs(unsigned int from, unsigned int cnt);
 
 static inline void irq_free_desc(unsigned int irq)
 {
