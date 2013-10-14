@@ -361,4 +361,5 @@ beta14.2
     mmc: core: fix possbile memory leak
     video: tegra: clock/power ungate when reading sd registers
     video: tegra: use phys_addr_t to hold phys addr
+    video: tegra: apply cmu changes only when active
     
