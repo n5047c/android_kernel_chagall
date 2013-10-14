@@ -374,4 +374,5 @@ beta14.2
     sched: smart wake-affine
     memcg: replace ss->id_lock with a rwlock
     sched, rt: Provide means of disabling cross-cpu bandwidth sharing
+    video: tegra: fix compiling with cmu disabled
     
