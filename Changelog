@@ -336,4 +336,5 @@ beta14.2
     backlight: rename corgibl_limit_intensity() to genericbl_limit_intensity()
     drivers/leds/led-triggers.c: fix memory leak
     leds: save the delay values after a successful call to blink_set()
+    lib/kstrtox: common code between kstrto*() and simple_strto*() functions
     
