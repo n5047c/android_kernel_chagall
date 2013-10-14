@@ -360,4 +360,5 @@ beta14.2
     block: elevator: add elevator_queue_empty_fn
     mmc: core: fix possbile memory leak
     video: tegra: clock/power ungate when reading sd registers
+    video: tegra: use phys_addr_t to hold phys addr
     
