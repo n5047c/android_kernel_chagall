@@ -335,4 +335,5 @@ beta14.2
     drivers/hwmon/hwmon.c: convert idr to ida and use ida_simple_get()
     backlight: rename corgibl_limit_intensity() to genericbl_limit_intensity()
     drivers/leds/led-triggers.c: fix memory leak
+    leds: save the delay values after a successful call to blink_set()
     
