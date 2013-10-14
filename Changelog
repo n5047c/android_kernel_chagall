@@ -359,4 +359,5 @@ beta14.2
     block: tweak deadline scheduler a little harder
     block: elevator: add elevator_queue_empty_fn
     mmc: core: fix possbile memory leak
+    video: tegra: clock/power ungate when reading sd registers
     
