@@ -343,4 +343,5 @@ beta14.2
     lib/idr.c: fix comment for ida_get_new_above()
     lib/string.c: fix strim() semantics for strings that have only blanks
     fat: follow rename pack_hex_byte() to hex_byte_pack()
+    dynamic_debug: Add __dynamic_dev_dbg
     
