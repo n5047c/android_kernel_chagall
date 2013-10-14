@@ -372,4 +372,5 @@ beta14.2
     CPU hotplug, writeback: Don't call writeback_set_ratelimit() too often during hotplug
     cpufreq: Resolve CPUFREQ_NOTIFY issue
     sched: smart wake-affine
+    memcg: replace ss->id_lock with a rwlock
     
