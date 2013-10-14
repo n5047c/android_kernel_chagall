@@ -363,4 +363,5 @@ beta14.2
     video: tegra: use phys_addr_t to hold phys addr
     video: tegra: apply cmu changes only when active
     video: tegra: fix explicit null dereference
+    video: tegra: fix refresh rate function
     
