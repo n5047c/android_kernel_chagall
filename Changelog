@@ -345,4 +345,5 @@ beta14.2
     fat: follow rename pack_hex_byte() to hex_byte_pack()
     dynamic_debug: Add __dynamic_dev_dbg
     dynamic_debug: remove unused control variables
+    dynamic_debug: make netdev_dbg() call __netdev_printk()
     
