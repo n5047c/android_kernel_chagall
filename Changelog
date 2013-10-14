@@ -328,4 +328,8 @@ beta14
     mm/huge_memory: fix typo when updating mmu cache
     mm: munlock use mapcount to avoid terrible overhead
     mm/vmstat.c: cache align vm_stat
+
+beta14.2
+    fs/pipe.c: add ->statfs callback for pipefs
+    hwmon: convert idr to ida and use ida_simple interface
     
