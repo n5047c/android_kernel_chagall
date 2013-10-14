@@ -355,4 +355,5 @@ beta14.2
     input: cfboost: fix pm_qos include file
     input: cfboost: correct name for struct pm_qos_request*_list
     sched_fair: sched_nr_latency = 3
+    mmc: wakeup panic fix aka sdio_irq_thread
     
