@@ -371,4 +371,5 @@ beta14.2
     nvmap: implement deferred cache maintenance
     CPU hotplug, writeback: Don't call writeback_set_ratelimit() too often during hotplug
     cpufreq: Resolve CPUFREQ_NOTIFY issue
+    sched: smart wake-affine
     
