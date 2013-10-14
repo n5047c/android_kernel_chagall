@@ -332,4 +332,5 @@ beta14
 beta14.2
     fs/pipe.c: add ->statfs callback for pipefs
     hwmon: convert idr to ida and use ida_simple interface
+    drivers/hwmon/hwmon.c: convert idr to ida and use ida_simple_get()
     
