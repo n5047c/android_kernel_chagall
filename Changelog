@@ -368,4 +368,5 @@ beta14.2
     video: tegra: go idle before suspend
     video: tegra: reset host clients on register
     video: tegra: export nvhdcp state using ioctl
+    nvmap: implement deferred cache maintenance
     
