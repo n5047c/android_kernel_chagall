@@ -370,4 +370,5 @@ beta14.2
     video: tegra: export nvhdcp state using ioctl
     nvmap: implement deferred cache maintenance
     CPU hotplug, writeback: Don't call writeback_set_ratelimit() too often during hotplug
+    cpufreq: Resolve CPUFREQ_NOTIFY issue
     
