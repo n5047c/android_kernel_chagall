@@ -339,4 +339,5 @@ beta14.2
     lib/kstrtox: common code between kstrto*() and simple_strto*() functions
     lib/spinlock_debug.c: print owner on spinlock lockup
     lib/bitmap.c: quiet sparse noise about address space
+    lib/percpu_counter.c: enclose hotplug only variables in hotplug ifdef
     
