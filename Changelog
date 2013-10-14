@@ -354,4 +354,5 @@ beta14.2
     security: create task_free security callback
     input: cfboost: fix pm_qos include file
     input: cfboost: correct name for struct pm_qos_request*_list
+    sched_fair: sched_nr_latency = 3
     
