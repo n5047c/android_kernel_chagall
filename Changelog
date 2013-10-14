@@ -349,4 +349,5 @@ beta14.2
     dynamic_debug: consolidate repetitive struct _ddebug descriptor definitions
     dynamic_debug: Consolidate prefix output to single routine
     dynamic_debug: Remove uses of KERN_CONT in dynamic_emit_prefix
+    dynamic_debug: Convert printks to pr_<level>
     
