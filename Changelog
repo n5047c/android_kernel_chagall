@@ -351,4 +351,5 @@ beta14.2
     dynamic_debug: Remove uses of KERN_CONT in dynamic_emit_prefix
     dynamic_debug: Convert printks to pr_<level>
     security: trusted foundations: fix coarse_page_table_array init
+    security: create task_free security callback
     
