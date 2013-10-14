@@ -344,4 +344,5 @@ beta14.2
     lib/string.c: fix strim() semantics for strings that have only blanks
     fat: follow rename pack_hex_byte() to hex_byte_pack()
     dynamic_debug: Add __dynamic_dev_dbg
+    dynamic_debug: remove unused control variables
     
