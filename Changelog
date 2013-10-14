@@ -375,4 +375,5 @@ beta14.2
     memcg: replace ss->id_lock with a rwlock
     sched, rt: Provide means of disabling cross-cpu bandwidth sharing
     video: tegra: fix compiling with cmu disabled
+    video: tegra: fix dc clk enable/disable
     
