@@ -394,4 +394,5 @@ pre_beta15
     ARM: tegra: common: Set SCLK to 40MHz for spi
     arm: remove several unnecessary module.h include instances
     [PATCH] ARM: move CP15 definitions to separate header file
+    ARM: 7476/1: vfp: only clear vfp state for current cpu in vfp_pm_suspend
     
