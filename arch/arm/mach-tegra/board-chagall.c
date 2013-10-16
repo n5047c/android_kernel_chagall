@@ -172,6 +172,9 @@ static struct tegra_thermal_data thermal_data = {
 	.tc1 = 0,
 	.tc2 = 1,
 	.passive_delay = 2000,
+};
+
+static struct tegra_skin_data skin_data = {
 #ifdef CONFIG_TEGRA_SKIN_THROTTLE
 	.skin_device_id = THERMAL_DEVICE_ID_SKIN,
 	.temp_throttle_skin = 43000,
@@ -1119,6 +1122,7 @@ __setup("touch=", touch_check);
 static void __init tegra_chagall_init(void)
 {
 	tegra_thermal_init(&thermal_data,
+				&skin_data,
 				throttle_list,
 				ARRAY_SIZE(throttle_list));
 	tegra_clk_init_from_table(chagall_clk_init_table);
