@@ -390,4 +390,5 @@ pre_beta15
     arm: tegra: thermal: cleanup thermal dependencies
     arm: tegra: thermal: separate skin from thermals
     provide disable_cpufreq() function to disable the API
+    cpufreq: return early from __cpufreq_driver_getavg()
     
