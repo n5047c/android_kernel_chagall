@@ -385,4 +385,5 @@ pre_beta15
     arm: tegra3: don't cast __iomem pointers
     ARM: tegra: timer: don't cast __iomem pointers
     fixup: module.h
+    ARM: tegra: fuse: Fix coverity issue
     
