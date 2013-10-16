@@ -388,4 +388,5 @@ pre_beta15
     ARM: tegra: fuse: Fix coverity issue
     arm: tegra: fuse: create SOC specific fuse header files
     arm: tegra: thermal: cleanup thermal dependencies
+    arm: tegra: thermal: separate skin from thermals
     
