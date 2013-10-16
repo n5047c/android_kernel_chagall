@@ -389,4 +389,5 @@ pre_beta15
     arm: tegra: fuse: create SOC specific fuse header files
     arm: tegra: thermal: cleanup thermal dependencies
     arm: tegra: thermal: separate skin from thermals
+    provide disable_cpufreq() function to disable the API
     
