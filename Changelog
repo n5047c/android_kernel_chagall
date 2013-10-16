@@ -381,4 +381,5 @@ beta14.2
 
 pre_beta15
     Revert "video: tegra: go idle before suspend"
+    Revert "video: tegra: fix panel init sequence"
     
