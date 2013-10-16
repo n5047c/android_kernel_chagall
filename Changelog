@@ -384,4 +384,5 @@ pre_beta15
     Revert "video: tegra: fix panel init sequence"
     arm: tegra3: don't cast __iomem pointers
     ARM: tegra: timer: don't cast __iomem pointers
+    fixup: module.h
     
