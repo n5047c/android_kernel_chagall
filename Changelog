@@ -393,4 +393,5 @@ pre_beta15
     cpufreq: return early from __cpufreq_driver_getavg()
     ARM: tegra: common: Set SCLK to 40MHz for spi
     arm: remove several unnecessary module.h include instances
+    [PATCH] ARM: move CP15 definitions to separate header file
     
