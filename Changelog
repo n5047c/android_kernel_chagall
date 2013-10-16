@@ -395,4 +395,5 @@ pre_beta15
     arm: remove several unnecessary module.h include instances
     [PATCH] ARM: move CP15 definitions to separate header file
     ARM: 7476/1: vfp: only clear vfp state for current cpu in vfp_pm_suspend
+    cpufreq_stats: fix warning ISO C90 forbids mixed declarations and code
     
