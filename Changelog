@@ -438,4 +438,5 @@ pre_beta15
     prio_tree: cleanup prio_tree_left()/prio_tree_right()
     prio_tree: simplify prio_tree_expand()
     prio_tree: introduce prio_set_parent()
+    crypto: upstream 3.4 compatible
     
