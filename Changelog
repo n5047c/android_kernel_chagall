@@ -399,4 +399,5 @@ pre_beta15
     Revert "video: tegra: fix error dereferencing pointer to incomplete type"
     Revert "video: tegra: host: Boot MSENC at init"
     Revert "video: tegra: host: Fix resource leak"
+    Revert "video: tegra: add Tegra MSENC module support"
     
