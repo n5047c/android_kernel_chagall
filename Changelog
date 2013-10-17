@@ -404,4 +404,5 @@ pre_beta15
     tegra3_clocks: update clock settings
     arm: tegra: update latency allowance
     arm: tegra3: update emc settings
+    arm: tegra3: reduce emc bridge mv to 1000
     
