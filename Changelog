@@ -429,4 +429,5 @@ pre_beta15
     watchdog: Update Kconfig entries
     lib: fix implicit users of kernel.h for TAINT_WARN
     vsprintf: make %pV handling compatible with kasprintf()
+    lib: reduce the use of module.h wherever possible
     

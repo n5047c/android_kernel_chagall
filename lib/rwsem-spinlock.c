@@ -7,7 +7,7 @@
  */
 #include <linux/rwsem.h>
 #include <linux/sched.h>
-#include <linux/module.h>
+#include <linux/export.h>
 
 enum rwsem_waiter_type {
 	RWSEM_WAITING_FOR_WRITE,
