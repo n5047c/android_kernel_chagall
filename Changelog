@@ -419,4 +419,5 @@ pre_beta15
     crc32: miscellaneous cleanups
     crc32: fix mixing of endian-specific types
     crc32: make CRC_*_BITS definition correspond to actual bit counts
+    crc32: add slice-by-8 algorithm to existing code
     
