@@ -436,4 +436,5 @@ pre_beta15
     string: memchr_inv() speed improvements
     prio_tree: remove unnecessary code in prio_tree_replace
     prio_tree: cleanup prio_tree_left()/prio_tree_right()
+    prio_tree: simplify prio_tree_expand()
     
