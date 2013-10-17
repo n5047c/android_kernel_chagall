@@ -412,4 +412,5 @@ pre_beta15
     ARM: 7541/1: Add ARM ERRATA 775420 workaround
     ARM: 7205/2: sched_clock: allow sched_clock to be selected at runtime
     tegra3_clocks: upstream 3.4 compatible
+    crc32: optimize inner loop
     
