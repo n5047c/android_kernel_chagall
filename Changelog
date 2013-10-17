@@ -434,4 +434,5 @@ pre_beta15
     lib: remove the second argument of k[un]map_atomic()
     idr: make idr_get_next() good for rcu_read_lock()
     string: memchr_inv() speed improvements
+    prio_tree: remove unnecessary code in prio_tree_replace
     
