@@ -410,4 +410,5 @@ pre_beta15
     ARM: 7401/1: mm: Fix section mismatches
     ARM: 7478/1: errata: extend workaround for erratum #720789
     ARM: 7541/1: Add ARM ERRATA 775420 workaround
+    ARM: 7205/2: sched_clock: allow sched_clock to be selected at runtime
     
