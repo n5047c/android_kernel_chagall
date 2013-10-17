@@ -427,4 +427,5 @@ pre_beta15
     Remove useless get_driver()/put_driver() calls
     Reduce the number of expensive division instructions done by _parse_integer()
     watchdog: Update Kconfig entries
+    lib: fix implicit users of kernel.h for TAINT_WARN
     
