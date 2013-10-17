@@ -413,4 +413,5 @@ pre_beta15
     ARM: 7205/2: sched_clock: allow sched_clock to be selected at runtime
     tegra3_clocks: upstream 3.4 compatible
     crc32: optimize inner loop
+    crc32: remove two instances of trailing whitespaces
     
