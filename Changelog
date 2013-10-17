@@ -431,4 +431,5 @@ pre_beta15
     vsprintf: make %pV handling compatible with kasprintf()
     lib: reduce the use of module.h wherever possible
     uevent: send events in correct order according to seqnum (v3)
+    lib: remove the second argument of k[un]map_atomic()
     
