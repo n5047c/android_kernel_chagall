@@ -400,4 +400,5 @@ pre_beta15
     Revert "video: tegra: host: Boot MSENC at init"
     Revert "video: tegra: host: Fix resource leak"
     Revert "video: tegra: add Tegra MSENC module support"
+    arm: tegra3: remove cpu_mode sclk
     
