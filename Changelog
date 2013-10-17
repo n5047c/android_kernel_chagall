@@ -417,4 +417,5 @@ pre_beta15
     crc32: move long comment about crc32 fundamentals to Documentation/
     crc32: simplify unit test code
     crc32: miscellaneous cleanups
+    crc32: fix mixing of endian-specific types
     
