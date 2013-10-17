@@ -403,4 +403,5 @@ pre_beta15
     arm: tegra3: remove cpu_mode sclk
     tegra3_clocks: update clock settings
     arm: tegra: update latency allowance
+    arm: tegra3: update emc settings
     
