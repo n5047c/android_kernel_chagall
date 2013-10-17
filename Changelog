@@ -414,4 +414,5 @@ pre_beta15
     tegra3_clocks: upstream 3.4 compatible
     crc32: optimize inner loop
     crc32: remove two instances of trailing whitespaces
+    crc32: move long comment about crc32 fundamentals to Documentation/
     
