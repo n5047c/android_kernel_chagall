@@ -21,7 +21,6 @@
 #include <linux/slab.h>         /* for kzalloc */
 #include <linux/firmware.h>
 #include <linux/module.h>
-#include <mach/clk.h>
 #include <asm/byteorder.h>      /* for parsing ucode image wrt endianness */
 #include <linux/delay.h>	/* for udelay */
 #include <linux/scatterlist.h>
@@ -332,12 +331,6 @@ void nvhost_msenc_init(struct nvhost_device *dev)
 	if (err || !m->valid) {
 		dev_err(&dev->dev, "ucode not valid");
 		goto clean_up;
-	}
-
-	if (!pdata->can_powergate) {
-		nvhost_module_busy(dev);
-		msenc_boot(dev);
-		nvhost_module_idle(dev);
 	}
 
 	return;

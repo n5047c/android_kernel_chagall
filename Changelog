@@ -397,4 +397,5 @@ pre_beta15
     ARM: 7476/1: vfp: only clear vfp state for current cpu in vfp_pm_suspend
     cpufreq_stats: fix warning ISO C90 forbids mixed declarations and code
     Revert "video: tegra: fix error dereferencing pointer to incomplete type"
+    Revert "video: tegra: host: Boot MSENC at init"
     
