@@ -409,4 +409,5 @@ pre_beta15
     arm: remove the second argument of k[un]map_atomic()
     ARM: 7401/1: mm: Fix section mismatches
     ARM: 7478/1: errata: extend workaround for erratum #720789
+    ARM: 7541/1: Add ARM ERRATA 775420 workaround
     
