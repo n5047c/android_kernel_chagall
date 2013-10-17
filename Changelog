@@ -425,4 +425,5 @@ pre_beta15
     crc32: bolt on crc32c
     crc32: add self-test code for crc32c
     Remove useless get_driver()/put_driver() calls
+    Reduce the number of expensive division instructions done by _parse_integer()
     
