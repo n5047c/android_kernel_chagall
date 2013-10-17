@@ -437,4 +437,5 @@ pre_beta15
     prio_tree: remove unnecessary code in prio_tree_replace
     prio_tree: cleanup prio_tree_left()/prio_tree_right()
     prio_tree: simplify prio_tree_expand()
+    prio_tree: introduce prio_set_parent()
     
