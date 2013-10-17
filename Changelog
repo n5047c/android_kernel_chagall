@@ -428,4 +428,5 @@ pre_beta15
     Reduce the number of expensive division instructions done by _parse_integer()
     watchdog: Update Kconfig entries
     lib: fix implicit users of kernel.h for TAINT_WARN
+    vsprintf: make %pV handling compatible with kasprintf()
     
