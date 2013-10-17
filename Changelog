@@ -432,4 +432,5 @@ pre_beta15
     lib: reduce the use of module.h wherever possible
     uevent: send events in correct order according to seqnum (v3)
     lib: remove the second argument of k[un]map_atomic()
+    idr: make idr_get_next() good for rcu_read_lock()
     
