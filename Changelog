@@ -406,4 +406,5 @@ pre_beta15
     arm: tegra3: update emc settings
     arm: tegra3: reduce emc bridge mv to 1000
     video: tegra: simplify 3d frequency scaling
+    arm: remove the second argument of k[un]map_atomic()
     
