@@ -421,4 +421,5 @@ pre_beta15
     crc32: make CRC_*_BITS definition correspond to actual bit counts
     crc32: add slice-by-8 algorithm to existing code
     crc32: optimize loop counter for x86
+    crc32: add note about this patchset to crc32.c
     
