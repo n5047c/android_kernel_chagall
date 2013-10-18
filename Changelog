@@ -447,4 +447,5 @@ pre_beta15.1
     Revert "video: tegra: enable 2D power gating"
     mm: improve data writeback operations
     suspend: shorten time to enter sleep state
+    cpufreq: Manage only online cpus
     
