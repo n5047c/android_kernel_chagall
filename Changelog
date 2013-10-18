@@ -479,4 +479,5 @@ pre_beta15.1
     rcu: Fix mismatched variable in rcutree_trace.c
     rcu: Abstract common code for RCU grace-period-wait primitives
     jrcu: fixup after recent rcu updates
+    rcu: Catch rcutorture up to new RCU API additions
     
