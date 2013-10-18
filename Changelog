@@ -488,4 +488,5 @@ pre_beta15.1
     rcu: Update comments to reflect softirqs vs. kthreads
     rcu: Move RCU_BOOST declarations to allow compiler checking
     rcu: Add event-trace markers to TREE_RCU kthreads
+    rcu: Make TINY_RCU also use softirq for RCU_BOOST=n
     
