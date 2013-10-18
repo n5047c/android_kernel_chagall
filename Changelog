@@ -480,4 +480,5 @@ pre_beta15.1
     rcu: Abstract common code for RCU grace-period-wait primitives
     jrcu: fixup after recent rcu updates
     rcu: Catch rcutorture up to new RCU API additions
+    rcu: Don't destroy rcu_torture_boost() callback until it is done
     
