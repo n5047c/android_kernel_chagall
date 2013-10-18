@@ -462,4 +462,5 @@ pre_beta15.1
     locking, printk: Annotate logbuf_lock as raw
     locking, sched: Annotate thread_group_cputimer as raw
     locking, semaphores: Annotate inner lock as raw
+    locking, timer_stats: Annotate table_lock as raw
     
