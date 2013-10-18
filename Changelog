@@ -444,4 +444,5 @@ pre_beta15
 pre_beta15.1
     optimize kernel building for cortex a9
     Revert "video: tegra: implement 2d power gating"
+    Revert "video: tegra: enable 2D power gating"
     
