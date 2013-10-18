@@ -483,4 +483,5 @@ pre_beta15.1
     rcu: Don't destroy rcu_torture_boost() callback until it is done
     rcu: Add event-tracing for RCU callback invocation
     rcu: Event-trace markers for computing RCU CPU utilization
+    rcu: Put names into TINY_RCU structures under RCU_TRACE
     
