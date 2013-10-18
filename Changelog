@@ -461,4 +461,5 @@ pre_beta15.1
     locking, tracing: Annotate tracing locks as raw
     locking, printk: Annotate logbuf_lock as raw
     locking, sched: Annotate thread_group_cputimer as raw
+    locking, semaphores: Annotate inner lock as raw
     
