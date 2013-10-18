@@ -450,4 +450,5 @@ pre_beta15.1
     cpufreq: Manage only online cpus
     arm: tegra: lower dvfs cpu_lp rate limits
     nohz: Fix update_ts_time_stat idle accounting
+    nohz: Make idle/iowait counter update conditional
     
