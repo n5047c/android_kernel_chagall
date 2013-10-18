@@ -492,4 +492,5 @@ pre_beta15.1
     rcu: Add grace-period, quiescent-state, and call_rcu trace events
     rcu: Simplify quiescent-state accounting
     rcu: Allow rcutorture's stat_interval parameter to be changed at runtime
+    nohz: Remove nohz_cpu_mask
     
