@@ -464,4 +464,5 @@ pre_beta15.1
     locking, semaphores: Annotate inner lock as raw
     locking, timer_stats: Annotate table_lock as raw
     locking, latencytop: Annotate latency_lock as raw
+    async: uninitialized warning corrections
     
