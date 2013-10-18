@@ -448,4 +448,5 @@ pre_beta15.1
     mm: improve data writeback operations
     suspend: shorten time to enter sleep state
     cpufreq: Manage only online cpus
+    arm: tegra: lower dvfs cpu_lp rate limits
     
