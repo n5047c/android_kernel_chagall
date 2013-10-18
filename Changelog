@@ -481,4 +481,5 @@ pre_beta15.1
     jrcu: fixup after recent rcu updates
     rcu: Catch rcutorture up to new RCU API additions
     rcu: Don't destroy rcu_torture_boost() callback until it is done
+    rcu: Add event-tracing for RCU callback invocation
     
