@@ -442,4 +442,5 @@ pre_beta15
     fs: improve generic fsync
 
 pre_beta15.1
+    optimize kernel building for cortex a9
     
