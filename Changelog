@@ -473,4 +473,5 @@ pre_beta15.1
     sched: Allow SD_NODES_PER_DOMAIN to be overridden
     sched: Remove redundant test in check_preempt_tick()
     PM / Runtime: Introduce trace points for tracing rpm_* functions
+    rcu: Use kthread_create_on_node()
     
