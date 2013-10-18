@@ -475,4 +475,5 @@ pre_beta15.1
     PM / Runtime: Introduce trace points for tracing rpm_* functions
     rcu: Use kthread_create_on_node()
     rcu: Avoid unnecessary self-wakeup of per-CPU kthreads
+    rcu: Restore checks for blocking in RCU read-side critical sections
     
