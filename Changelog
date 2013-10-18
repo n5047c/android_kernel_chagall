@@ -476,4 +476,5 @@ pre_beta15.1
     rcu: Use kthread_create_on_node()
     rcu: Avoid unnecessary self-wakeup of per-CPU kthreads
     rcu: Restore checks for blocking in RCU read-side critical sections
+    rcu: Fix mismatched variable in rcutree_trace.c
     
