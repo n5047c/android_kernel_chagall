@@ -472,4 +472,5 @@ pre_beta15.1
     tracing: Add a counter clock for those that do not trust clocks
     sched: Allow SD_NODES_PER_DOMAIN to be overridden
     sched: Remove redundant test in check_preempt_tick()
+    PM / Runtime: Introduce trace points for tracing rpm_* functions
     
