@@ -449,4 +449,5 @@ pre_beta15.1
     suspend: shorten time to enter sleep state
     cpufreq: Manage only online cpus
     arm: tegra: lower dvfs cpu_lp rate limits
+    nohz: Fix update_ts_time_stat idle accounting
     
