@@ -460,4 +460,5 @@ pre_beta15.1
     locking, sched, cgroups: Annotate release_list_lock as raw
     locking, tracing: Annotate tracing locks as raw
     locking, printk: Annotate logbuf_lock as raw
+    locking, sched: Annotate thread_group_cputimer as raw
     
