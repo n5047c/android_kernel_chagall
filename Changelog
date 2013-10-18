@@ -458,4 +458,5 @@ pre_beta15.1
     clocksource: Make watchdog reset lockless
     locking, kprobes: Annotate the hash locks and kretprobe.lock as raw
     locking, sched, cgroups: Annotate release_list_lock as raw
+    locking, tracing: Annotate tracing locks as raw
     
