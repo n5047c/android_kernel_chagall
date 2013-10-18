@@ -455,4 +455,5 @@ pre_beta15.1
     clockevents: Make minimum delay adjustments configurable
     clockevents: Add direct ktime programming function
     rtmutex: Cleanup the debug code
+    clocksource: Make watchdog reset lockless
     
