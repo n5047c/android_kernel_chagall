@@ -467,4 +467,5 @@ pre_beta15.1
     async: uninitialized warning corrections
     futex: uninitialized warning corrections
     futex: Fix spelling in a source code comment
+    lockdep: Comment all warnings
     
