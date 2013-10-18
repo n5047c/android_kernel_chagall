@@ -469,4 +469,5 @@ pre_beta15.1
     futex: Fix spelling in a source code comment
     lockdep: Comment all warnings
     watchdog: Drop FIFO policy in exit path
+    tracing: Add a counter clock for those that do not trust clocks
     
