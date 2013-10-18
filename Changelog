@@ -493,4 +493,5 @@ pre_beta15.1
     rcu: Simplify quiescent-state accounting
     rcu: Allow rcutorture's stat_interval parameter to be changed at runtime
     nohz: Remove nohz_cpu_mask
+    rcu: Eliminate in_irq() checks in rcu_enter_nohz()
     
