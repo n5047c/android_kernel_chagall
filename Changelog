@@ -485,4 +485,5 @@ pre_beta15.1
     rcu: Event-trace markers for computing RCU CPU utilization
     rcu: Put names into TINY_RCU structures under RCU_TRACE
     rcu: Add RCU type to callback-invocation tracing
+    rcu: Update comments to reflect softirqs vs. kthreads
     
