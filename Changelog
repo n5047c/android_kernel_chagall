@@ -456,4 +456,5 @@ pre_beta15.1
     clockevents: Add direct ktime programming function
     rtmutex: Cleanup the debug code
     clocksource: Make watchdog reset lockless
+    locking, kprobes: Annotate the hash locks and kretprobe.lock as raw
     
