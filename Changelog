@@ -453,4 +453,5 @@ pre_beta15.1
     nohz: Make idle/iowait counter update conditional
     nohz: Remove "Switched to NOHz mode" debugging messages
     clockevents: Make minimum delay adjustments configurable
+    clockevents: Add direct ktime programming function
     
