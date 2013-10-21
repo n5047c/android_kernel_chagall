@@ -851,16 +851,4 @@ void __kfree_rcu(struct rcu_head *head, unsigned long offset)
 
 extern void kfree(const void *);
 
-#if defined(CONFIG_TREE_PREEMPT_RCU)
-static inline void __rcu_reclaim(struct rcu_head *head)
-{
-	unsigned long offset = (unsigned long)head->func;
-
-	if (__is_kfree_rcu_offset(offset))
-		kfree((void *)head - offset);
-	else
-		head->func(head);
-}
-#endif /* CONFIG_TREE_PREEMPT_RCU */
-
 #endif /* __LINUX_RCUPDATE_H */
