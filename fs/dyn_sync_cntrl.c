@@ -131,7 +131,7 @@ static void dyn_fsync_late_resume(struct early_suspend *h)
 
 static struct early_suspend dyn_fsync_early_suspend_handler = 
 	{
-		.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN,
+		.level = EARLY_SUSPEND_LEVEL_DISABLE_FB, //EARLY_SUSPEND_LEVEL_BLANK_SCREEN,
 		.suspend = dyn_fsync_early_suspend,
 		.resume = dyn_fsync_late_resume,
 	};
