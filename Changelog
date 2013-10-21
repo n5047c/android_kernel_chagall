@@ -381,4 +381,5 @@ beta14.2
 
 pre_beta15.2
     lib/int_sqrt.c: optimize square root algorithm
+    LOAD_FREQ (4*HZ+61) avoids loadavg Moire
     
