@@ -384,4 +384,5 @@ pre_beta15.2
     LOAD_FREQ (4*HZ+61) avoids loadavg Moire
     SCHEDULER: Autogroup patch group by current user android UID instead of task ID
     dyn_sync_cntrl: changed early suspend level, due to interference with the screen turns off
+    mm: remove compressed copy from zram in-memory
     
