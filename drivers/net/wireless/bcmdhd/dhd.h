@@ -24,7 +24,7 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: dhd.h 333052 2012-05-12 02:09:28Z $
+ * $Id: dhd.h 344123 2012-07-11 09:33:49Z $
  */
 
 /****************
@@ -75,7 +75,6 @@ enum dhd_bus_state {
 	DHD_BUS_DATA		/* Ready for frame transfers */
 };
 
-
 /* Firmware requested operation mode */
 #define STA_MASK			0x0001
 #define HOSTAPD_MASK		0x0002
@@ -112,6 +111,7 @@ enum dhd_bus_wake_state {
 	WAKE_LOCK_SOFTAP_THREAD,
 	WAKE_LOCK_MAX
 };
+
 enum dhd_prealloc_index {
 	DHD_PREALLOC_PROT = 0,
 	DHD_PREALLOC_RXBUF,
@@ -213,12 +213,10 @@ typedef struct dhd_pub {
 	char eventmask[WL_EVENTING_MASK_LEN];
 	int	op_mode;				/* STA, HostAPD, WFD, SoftAP */
 
-
 /* Set this to 1 to use a seperate interface (p2p0) for p2p operations.
  *  For ICS MR1 releases it should be disable to be compatable with ICS MR1 Framework
  *  see target dhd-cdc-sdmmc-panda-cfg80211-icsmr1-gpl-debug in Makefile
  */
-/* #define WL_ENABLE_P2P_IF		1 */
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 25)) && 1
 	struct mutex 	wl_start_stop_lock; /* lock/unlock for Android start/stop */
@@ -237,6 +235,11 @@ typedef struct dhd_pub {
 #ifdef WLMEDIA_HTSF
 	uint8 htsfdlystat_sz; /* Size of delay stats, max 255B */
 #endif
+#ifdef DYNAMIC_DTIM_SKIP
+	ulong pre_rx_packets;
+	int   dynamic_dtim_skip;
+	int   dynamic_dtim_data_counter;
+#endif
 } dhd_pub_t;
 
 typedef struct dhd_cmn {
@@ -253,7 +256,7 @@ typedef struct dhd_cmn {
 			SMP_RD_BARRIER_DEPENDS(); \
 			while (dhd_mmc_suspend && retry++ != b) { \
 				SMP_RD_BARRIER_DEPENDS(); \
-				wait_event_interruptible_timeout(a, !dhd_mmc_suspend, HZ/100); \
+				wait_event_interruptible_timeout(a, !dhd_mmc_suspend, 1); \
 			} \
 		} while (0)
 	#define DHD_PM_RESUME_WAIT(a) 		_DHD_PM_RESUME_WAIT(a, 200)
@@ -265,17 +268,11 @@ typedef struct dhd_cmn {
 	#define SPINWAIT_SLEEP(a, exp, us) do { \
 		uint countdown = (us) + 9999; \
 		while ((exp) && (countdown >= 10000)) { \
-			wait_event_interruptible_timeout(a, FALSE, HZ/100); \
+			wait_event_interruptible_timeout(a, FALSE, 1); \
 			countdown -= 10000; \
 		} \
 	} while (0)
-	#define SPINWAIT_SLEEP_2(a, exp, us) do { \
-		uint countdown = (us) + 9999; \
-		while ((exp) && (countdown >= 10000)) { \
-			wait_event_timeout(a, FALSE, HZ/100); \
-			countdown -= 10000; \
-		} \
-	} while (0)
+
 	#else
 
 	#define DHD_PM_RESUME_WAIT_INIT(a)
@@ -439,6 +436,9 @@ extern void dhd_os_sdunlock_sndup_rxq(dhd_pub_t * pub);
 extern void dhd_os_sdlock_eventq(dhd_pub_t * pub);
 extern void dhd_os_sdunlock_eventq(dhd_pub_t * pub);
 extern bool dhd_os_check_hang(dhd_pub_t *dhdp, int ifidx, int ret);
+extern int dhd_os_send_hang_message(dhd_pub_t *dhdp);
+extern int net_os_send_hang_message(struct net_device *dev);
+extern void dhd_set_version_info(dhd_pub_t *pub, char *fw);
 
 #ifdef PNO_SUPPORT
 extern int dhd_pno_enable(dhd_pub_t *dhd, int pfn_enabled);
@@ -468,7 +468,6 @@ extern int net_os_rxfilter_add_remove(struct net_device *dev, int val, int num);
 
 extern int dhd_get_dtim_skip(dhd_pub_t *dhd);
 extern bool dhd_check_ap_wfd_mode_set(dhd_pub_t *dhd);
-
 
 #ifdef DHD_DEBUG
 extern int write_to_file(dhd_pub_t *dhd, uint8 *buf, int size);
@@ -500,7 +499,7 @@ extern int dhd_wl_ioctl(dhd_pub_t *dhd_pub, int ifindex, wl_ioctl_t *ioc, void *
 extern int dhd_wl_ioctl_cmd(dhd_pub_t *dhd_pub, int cmd, void *arg, int len, uint8 set,
                             int ifindex);
 
-extern struct dhd_cmn *dhd_common_init(osl_t *osh);
+extern struct dhd_cmn *dhd_common_init(uint16 devid, osl_t *osh);
 extern void dhd_common_deinit(dhd_pub_t *dhd_pub, dhd_cmn_t *sa_cmn);
 
 extern int dhd_do_driver_init(struct net_device *net);
@@ -529,6 +528,8 @@ extern int dhd_bus_membytes(dhd_pub_t *dhdp, bool set, uint32 address, uint8 *da
 extern void dhd_print_buf(void *pbuf, int len, int bytes_per_line);
 extern bool dhd_is_associated(dhd_pub_t *dhd, void *bss_buf, int *retval);
 extern uint dhd_bus_chip_id(dhd_pub_t *dhdp);
+extern uint dhd_bus_chiprev_id(dhd_pub_t *dhdp);
+extern uint dhd_bus_chippkg_id(dhd_pub_t *dhdp);
 
 #if defined(KEEP_ALIVE)
 extern int dhd_keep_alive_onoff(dhd_pub_t *dhd);
@@ -612,15 +613,26 @@ extern uint dhd_pktgen_len;
 #endif
 
 
+/* hooks for custom Roaming Trigger  setting via Makefile */
+#define DEFAULT_ROAM_TRIGGER_VALUE -75 /* dBm default roam trigger all band */
+#define DEFAULT_ROAM_TRIGGER_SETTING 	-1
+#ifndef CUSTOM_ROAM_TRIGGER_SETTING
+#define CUSTOM_ROAM_TRIGGER_SETTING 	DEFAULT_ROAM_TRIGGER_VALUE
+#endif
+
+/* hooks for custom Roaming Romaing  setting via Makefile */
+#define DEFAULT_ROAM_DELTA_VALUE  10 /* dBm default roam delta all band */
+#define DEFAULT_ROAM_DELTA_SETTING 	-1
+#ifndef CUSTOM_ROAM_DELTA_SETTING
+#define CUSTOM_ROAM_DELTA_SETTING 	DEFAULT_ROAM_DELTA_VALUE
+#endif
+
 /* optionally set by a module_param_string() */
 #define MOD_PARAM_PATHLEN	2048
 extern char fw_path[MOD_PARAM_PATHLEN];
 extern char nv_path[MOD_PARAM_PATHLEN];
 
-#ifdef DHD_BCM_WIFI_HDMI
-#define MOD_PARAM_TYPELEN 64
-extern char wifi_type[MOD_PARAM_TYPELEN];
-#endif /* DHD_BCM_WIFI_HDMI */
+#define MOD_PARAM_INFOLEN	512
 
 #ifdef SOFTAP
 extern char fw_path2[MOD_PARAM_PATHLEN];
@@ -768,16 +780,5 @@ void dhd_aoe_arp_clr(dhd_pub_t *dhd);
 int dhd_arp_get_arp_hostip_table(dhd_pub_t *dhd, void *buf, int buflen);
 void dhd_arp_offload_add_ip(dhd_pub_t *dhd, uint32 ipaddr);
 #endif /* ARP_OFFLOAD_SUPPORT */
-
-#ifdef DHD_BCM_WIFI_HDMI
-/* Wireless HDMI run-time enable flag */
-extern bool dhd_bcm_whdmi_enable;
-
-/* Network interface created for the Wireless HDMI soft AP */
-#define DHD_WHDMI_SOFTAP_IF_NAME	"wl0.2"
-#define DHD_WHDMI_SOFTAP_IF_NAME_LEN	5
-#define DHD_WHDMI_SOFTAP_IF_NUM		2
-
-#endif /* DHD_BCM_WIFI_HDMI */
 
 #endif /* _dhd_h_ */

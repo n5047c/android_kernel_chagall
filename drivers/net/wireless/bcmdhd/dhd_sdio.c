@@ -21,7 +21,7 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: dhd_sdio.c 338148 2012-06-11 20:35:45Z $
+ * $Id: dhd_sdio.c 352730 2012-08-23 20:55:11Z $
  */
 
 #include <typedefs.h>
@@ -353,39 +353,6 @@ static bool forcealign;
 /* Flag to indicate if we should download firmware on driver load */
 uint dhd_download_fw_on_driverload = TRUE;
 
-#define FW_TYPE_STA     0
-#define FW_TYPE_APSTA   1
-#define FW_TYPE_P2P     2
-
-const static char *bcm4330b1_fw_name[] = {
-        "fw_bcm4330b1.bin",
-        "fw_bcm4330b1_apsta.bin",
-        "fw_bcm4330b1_p2p.bin"
-};
-
-const static char *bcm4330b2_fw_name[] = {
-        "fw_bcm4330b2.bin",
-        "fw_bcm4330b2_apsta.bin",
-        "fw_bcm4330b2_p2p.bin"
-};
-
-const static char *bcm43362a0_fw_name[] = {
-        "fw_bcm43362a0.bin",
-        "fw_bcm43362a0_apsta.bin",
-        "fw_bcm43362a0_p2p.bin"
-};
-
-const static char *bcm43362a2_fw_name[] = {
-        "fw_bcm43362a2.bin",
-        "fw_bcm43362a2_apsta.bin",
-        "fw_bcm43362a2_p2p.bin"
-};
-
-#define BCM4330B1_CHIP_REV      3
-#define BCM4330B2_CHIP_REV      4
-#define BCM43362A0_CHIP_REV     0
-#define BCM43362A2_CHIP_REV     1
-
 #define ALIGNMENT  4
 
 #if defined(OOB_INTR_ONLY) && defined(HW_OOB)
@@ -431,6 +398,9 @@ do { \
 	do { \
 		regvar = R_REG(bus->dhd->osh, regaddr); \
 	} while (bcmsdh_regfail(bus->sdh) && (++retryvar <= retry_limit)); \
+	if(retryvar > 1)  \
+		DHD_ERROR(("%s: regvar[ %d ], retryvar[ %d ], regfails[ %d ], bcmsdh_regfail[ %d ] \
+				n",__FUNCTION__,regvar, retryvar ,bus->regfails, bcmsdh_regfail(bus->sdh))); \
 	if (retryvar) { \
 		bus->regfails += (retryvar-1); \
 		if (retryvar > retry_limit) { \
@@ -572,6 +542,8 @@ dhdsdio_set_siaddr_window(dhd_bus_t *bus, uint32 address)
 static int
 dhdsdio_htclk(dhd_bus_t *bus, bool on, bool pendok)
 {
+#define HT_AVAIL_ERROR_MAX	10
+	static int ht_avail_error = 0;
 	int err;
 	uint8 clkctl, clkreq, devctl;
 	bcmsdh_info_t *sdh;
@@ -584,18 +556,22 @@ dhdsdio_htclk(dhd_bus_t *bus, bool on, bool pendok)
 	clkctl = 0;
 	sdh = bus->sdh;
 
-
 	if (on) {
 		/* Request HT Avail */
 		clkreq = bus->alp_only ? SBSDIO_ALP_AVAIL_REQ : SBSDIO_HT_AVAIL_REQ;
 
-
-
-
 		bcmsdh_cfg_write(sdh, SDIO_FUNC_1, SBSDIO_FUNC1_CHIPCLKCSR, clkreq, &err);
 		if (err) {
-			DHD_ERROR(("%s: HT Avail request error: %d\n", __FUNCTION__, err));
+			ht_avail_error++;
+			if (ht_avail_error < HT_AVAIL_ERROR_MAX) {
+				DHD_ERROR(("%s: HT Avail request error: %d\n", __FUNCTION__, err));
+			} else {
+				if (ht_avail_error == HT_AVAIL_ERROR_MAX)
+					dhd_os_send_hang_message(bus->dhd);
+			}
 			return BCME_ERROR;
+		} else {
+			ht_avail_error = 0;
 		}
 
 		if (pendok &&
@@ -644,37 +620,10 @@ dhdsdio_htclk(dhd_bus_t *bus, bool on, bool pendok)
 			DHD_ERROR(("%s: HT Avail request error: %d\n", __FUNCTION__, err));
 			return BCME_ERROR;
 		}
-		/* ============RETRY START=============*/
-		if (!SBSDIO_CLKAV(clkctl, bus->alp_only)) {
-			DHD_ERROR(("%s: HT polling the 2nd ~~~HT RETRY AGAIN~~~~~\n",
-			           __FUNCTION__, PMU_MAX_TRANSITION_DLY, clkctl));
-			/* Otherwise, wait here (polling) for HT Avail */
-			SPINWAIT_SLEEP(sdioh_spinwait_sleep,
-				((clkctl = bcmsdh_cfg_read(sdh, SDIO_FUNC_1,
-			                                    SBSDIO_FUNC1_CHIPCLKCSR, &err)),
-			                                    !SBSDIO_CLKAV(clkctl, bus->alp_only)), PMU_MAX_TRANSITION_DLY);
-			if (err) {
-				DHD_ERROR(("%s: HT Avail request error: %d\n", __FUNCTION__, err));
-				return BCME_ERROR;
-			}
-		}
-		if (!SBSDIO_CLKAV(clkctl, bus->alp_only)) {
-			DHD_ERROR(("%s: HT polling the 3rd ~~~HT RETRY AGAIN~~~~~\n",
-			           __FUNCTION__, PMU_MAX_TRANSITION_DLY, clkctl));
-			/* Otherwise, wait here (polling) for HT Avail */
-			SPINWAIT_SLEEP_2(sdioh_spinwait_sleep,
-				((clkctl = bcmsdh_cfg_read(sdh, SDIO_FUNC_1,
-			                                    SBSDIO_FUNC1_CHIPCLKCSR, &err)),
-			                                    !SBSDIO_CLKAV(clkctl, bus->alp_only)), PMU_MAX_TRANSITION_DLY);
-			if (err) {
-				DHD_ERROR(("%s: HT Avail request error: %d\n", __FUNCTION__, err));
-				return BCME_ERROR;
-			}
-		}
-		/* ============RETRY END=============*/
 		if (!SBSDIO_CLKAV(clkctl, bus->alp_only)) {
 			DHD_ERROR(("%s: HT Avail timeout (%d): clkctl 0x%02x\n",
 			           __FUNCTION__, PMU_MAX_TRANSITION_DLY, clkctl));
+			dhd_os_send_hang_message(bus->dhd);
 			return BCME_ERROR;
 		}
 
@@ -1430,7 +1379,13 @@ dhd_bus_txctl(struct dhd_bus *bus, uchar *msg, uint msglen)
 		/* Send from dpc */
 		bus->ctrl_frame_buf = frame;
 		bus->ctrl_frame_len = len;
-		dhd_wait_for_event(bus->dhd, &bus->ctrl_frame_stat);
+		if (!bus->dpc_sched) {
+			bus->dpc_sched = TRUE;
+			dhd_sched_dpc(bus->dhd);
+		}
+		if (bus->ctrl_frame_stat) {
+			dhd_wait_for_event(bus->dhd, &bus->ctrl_frame_stat);
+		}
 		if (bus->ctrl_frame_stat == FALSE) {
 			DHD_INFO(("%s: ctrl_frame_stat == FALSE\n", __FUNCTION__));
 			ret = 0;
@@ -1567,8 +1522,7 @@ dhd_bus_rxctl(struct dhd_bus *bus, uchar *msg, uint msglen)
 
 	if (bus->dhd->rxcnt_timeout >= MAX_CNTL_TIMEOUT)
 		return -ETIMEDOUT;
-	if (rxlen < 0)
-		printk(KERN_ERR "%s : rxlen < 0 (%d)\n", __func__, rxlen);
+
 	return rxlen ? (int)rxlen : -EIO;
 }
 
@@ -2851,6 +2805,7 @@ dhdsdio_download_state(dhd_bus_t *bus, bool enter)
 
 	if (!bus->sih)
 		return BCME_ERROR;
+
 	/* To enter download state, disable ARM and reset SOCRAM.
 	 * To exit download state, simply reset ARM (default is RAM boot).
 	 */
@@ -3124,6 +3079,11 @@ dhd_bus_stop(struct dhd_bus *bus, bool enforce_mutex)
 	bus->rxskip = FALSE;
 	bus->tx_seq = bus->rx_seq = 0;
 
+	/* Set to a safe default.  It gets updated when we
+	 * receive a packet from the fw but when we reset,
+	 * we need a safe default to be able to send the
+	 * initial mac address.
+	 */
 	bus->tx_max = 4;
 
 	if (enforce_mutex)
@@ -3785,7 +3745,6 @@ dhdsdio_rxglom(dhd_bus_t *bus, uint8 rxseq)
 	}
 	return num;
 }
-
 
 /* Return TRUE if there may be more frames to read */
 static uint
@@ -5243,7 +5202,7 @@ done:
 }
 #endif /* DHD_DEBUG */
 
-#ifdef DHD_DEBUG
+#if (defined DHD_DEBUG)
 static void
 dhd_dump_cis(uint fn, uint8 *cis)
 {
@@ -5407,7 +5366,7 @@ dhdsdio_probe(uint16 venid, uint16 devid, uint16 bus_no, uint16 slot,
 	bus->usebufpool = FALSE; /* Use bufpool if allocated, else use locally malloced rxbuf */
 
 	/* attach the common module */
-	if (!(cmn = dhd_common_init(osh))) {
+	if (!(cmn = dhd_common_init(bus->cl_devid, osh))) {
 		DHD_ERROR(("%s: dhd_common_init failed\n", __FUNCTION__));
 		goto fail;
 	}
@@ -5519,11 +5478,10 @@ dhdsdio_probe_attach(struct dhd_bus *bus, osl_t *osh, void *sdh, void *regsva,
 		clkctl = bcmsdh_cfg_read(sdh, SDIO_FUNC_1, SBSDIO_FUNC1_CHIPCLKCSR, &err);
 
 	if (err || ((clkctl & ~SBSDIO_AVBITS) != DHD_INIT_CLKCTL1)) {
-		DHD_ERROR(("dhdsdio_probe: ChipClkCSR access: err %d wrote 0x%02x read 0x%02x\n",
-		           err, DHD_INIT_CLKCTL1, clkctl));
+		DHD_ERROR(("%s: ChipClkCSR access: err %d wrote 0x%02x read 0x%02x\n",
+		           __FUNCTION__, err, DHD_INIT_CLKCTL1, clkctl));
 		goto fail;
 	}
-
 
 #ifdef DHD_DEBUG
 	if (DHD_INFO_ON()) {
@@ -5761,37 +5719,6 @@ dhdsdio_probe_init(dhd_bus_t *bus, osl_t *osh, void *sdh)
 	bus->use_rxchain = (bool)bus->sd_rxchain;
 
 	return TRUE;
-}
-
-void
-dhd_bus_select_firmware_name_by_chip(struct dhd_bus *bus, char *dst, char *src)
-{
-        int fw_type=(strstr(src, "_apsta")?FW_TYPE_APSTA:(strstr(src, "_p2p")?FW_TYPE_P2P:FW_TYPE_STA));
-	int i; 
-     
-	strcpy(dst, src);
-
-	/* find out the last '/' */
-	i = strlen(dst);
-	while (i>0){
-		if (dst[i] == '/') break;
-		i--;
-	}
-
-        switch (bus->sih->chip) {
-        case BCM4330_CHIP_ID:
-                if (bus->sih->chiprev==BCM4330B1_CHIP_REV)
-                        strcpy(&dst[i+1], bcm4330b1_fw_name[fw_type]);
-                else
-                        strcpy(&dst[i+1], bcm4330b2_fw_name[fw_type]);
-                break;
-        case BCM43362_CHIP_ID:
-                if (bus->sih->chiprev==BCM43362A0_CHIP_REV)
-                        strcpy(&dst[i+1], bcm43362a0_fw_name[fw_type]);
-                else
-                        strcpy(&dst[i+1], bcm43362a2_fw_name[fw_type]);
-                break;
-        }
 }
 
 bool
@@ -6204,15 +6131,24 @@ _dhdsdio_download_firmware(struct dhd_bus *bus)
 		DHD_ERROR(("%s: error placing ARM core in reset\n", __FUNCTION__));
 		goto err;
 	}
-	/* Force to change device id to 0x4330 */
-	bus->cl_devid = 0x4330;
+
 	/* External image takes precedence if specified */
 	if ((bus->fw_path != NULL) && (bus->fw_path[0] != '\0')) {
 
-		char *fix_fw_path = "/system/vendor/firmware/bcm4330/fw_bcmdhd.bin";
-		bus->fw_path = fix_fw_path;
+		/* replace bcm43xx with bcm4330 or bcm4329 */
+		if ((p = strstr(bus->fw_path, "bcm43xx"))) {
+			if (bus->cl_devid == 0x4329) {
+				*(p + 5)='2';
+				*(p + 6)='9';
+			}
+			if (bus->cl_devid == 0x4330) {
+				*(p + 5)='3';
+				*(p + 6)='0';
+			}
+		}
 
-		printk(KERN_ERR "%s: device id : 0x%x\n", __func__, bus->cl_devid);
+		printf("%s: fw_path = %s, nv_path=%s\n", __FUNCTION__, bus->fw_path, bus->nv_path);
+
 		if (dhdsdio_download_code_file(bus, bus->fw_path)) {
 			DHD_ERROR(("%s: dongle image file download failed\n", __FUNCTION__));
 #ifdef BCMEMBEDIMAGE
@@ -6325,6 +6261,12 @@ dhd_bus_devreset(dhd_pub_t *dhdp, uint8 flag)
 			/* Force flow control as protection when stop come before ifconfig_down */
 			dhd_txflowcontrol(bus->dhd, ALL_INTERFACES, ON);
 #endif /* !defined(IGNORE_ETH0_DOWN) */
+
+#if !defined(OOB_INTR_ONLY)
+			/* to avoid supurious client interrupt during stop process */
+			bcmsdh_stop(bus->sdh);
+#endif /* !defined(OOB_INTR_ONLY) */
+
 			/* Expect app to have torn down any connection before calling */
 			/* Stop the bus, disable F2 */
 			dhd_bus_stop(bus, FALSE);
@@ -6415,9 +6357,24 @@ uint dhd_bus_chip_id(dhd_pub_t *dhdp)
 {
 	dhd_bus_t *bus = dhdp->bus;
 
-       return  bus->sih->chip;
+	return bus->sih->chip;
 }
 
+/* Get Chip Rev ID version */
+uint dhd_bus_chiprev_id(dhd_pub_t *dhdp)
+{
+	dhd_bus_t *bus = dhdp->bus;
+
+	return bus->sih->chiprev;
+}
+
+/* Get Chip Pkg ID version */
+uint dhd_bus_chippkg_id(dhd_pub_t *dhdp)
+{
+	dhd_bus_t *bus = dhdp->bus;
+
+	return bus->sih->chippkg;
+}
 
 int
 dhd_bus_membytes(dhd_pub_t *dhdp, bool set, uint32 address, uint8 *data, uint size)

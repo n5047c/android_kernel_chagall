@@ -24,7 +24,7 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: wlioctl.h 331292 2012-05-04 09:04:23Z $
+ * $Id: wlioctl.h 353331 2012-08-27 06:04:47Z $
  */
 
 
@@ -83,44 +83,6 @@ typedef struct wl_af_params {
 #include <packed_section_start.h>
 
 
-
-
-
-#define LEGACY2_WL_BSS_INFO_VERSION 108     
-
-
-typedef struct wl_bss_info_108 {
-	uint32      version;        
-	uint32      length;         
-	struct ether_addr BSSID;
-	uint16      beacon_period;      
-	uint16      capability;     
-	uint8       SSID_len;
-	uint8       SSID[32];
-	struct {
-		uint    count;          
-		uint8   rates[16];      
-	} rateset;              
-	chanspec_t  chanspec;       
-	uint16      atim_window;        
-	uint8       dtim_period;        
-	int16       RSSI;           
-	int8        phy_noise;      
-
-	uint8       n_cap;          
-	uint32      nbss_cap;       
-	uint8       ctl_ch;         
-	uint32      reserved32[1];      
-	uint8       flags;          
-	uint8       reserved[3];        
-	uint8       basic_mcs[MCSSET_LEN];  
-
-	uint16      ie_offset;      
-	uint32      ie_length;      
-	
-	
-} wl_bss_info_108_t;
-
 #define WL_BSS_INFO_VERSION 109     
 
 
@@ -157,23 +119,13 @@ typedef struct wl_bss_info {
 	
 } wl_bss_info_t;
 
-typedef struct wl_bsscfg {
-	uint32  wsec;
-	uint32  WPA_auth;
-	uint32  wsec_index;
-	uint32  associated;
-	uint32  BSS;
-	uint32  phytest_on;
-	struct ether_addr   prev_BSSID;
-	struct ether_addr   BSSID;
-} wl_bsscfg_t;
 
-typedef struct wl_bss_config {
-	uint32  atim_window;
-	uint32  beacon_period;
-	uint32  chanspec;
-} wl_bss_config_t;
+#define WL_BSS_FLAGS_FROM_BEACON	0x01
+#define WL_BSS_FLAGS_FROM_CACHE		0x02
+#define WL_BSS_FLAGS_RSSI_ONCHANNEL	0x04
 
+
+#define VHT_BI_SGI_80MHZ			0x00000100
 
 typedef struct wlc_ssid {
 	uint32      SSID_len;
@@ -558,9 +510,6 @@ typedef enum sup_auth_status {
 #define CRYPTO_ALGO_AES_OCB_MSDU    5
 #define CRYPTO_ALGO_AES_OCB_MPDU    6
 #define CRYPTO_ALGO_NALG        7
-#ifdef BCMWAPI_WPI
-#define CRYPTO_ALGO_SMS4        11
-#endif /* BCMWAPI_WPI */
 #define CRYPTO_ALGO_PMK			12	
 
 #define WSEC_GEN_MIC_ERROR  0x0001
@@ -612,9 +561,6 @@ typedef struct {
 #define AES_ENABLED     0x0004
 #define WSEC_SWFLAG     0x0008
 #define SES_OW_ENABLED      0x0040  
-#ifdef BCMWAPI_WPI
-#define SMS4_ENABLED        0x0100
-#endif /* BCMWAPI_WPI */
 
 
 #define WPA_AUTH_DISABLED   0x0000  
@@ -626,12 +572,6 @@ typedef struct {
 #define WPA2_AUTH_PSK       0x0080  
 #define BRCM_AUTH_PSK           0x0100  
 #define BRCM_AUTH_DPT       0x0200  
-#ifdef BCMWAPI_WAI
-#define WPA_AUTH_WAPI           0x0400
-#define WAPI_AUTH_NONE      WPA_AUTH_NONE   /* none (IBSS) */
-#define WAPI_AUTH_UNSPECIFIED   0x0400  /* over AS */
-#define WAPI_AUTH_PSK       0x0800  /* Pre-shared key */
-#endif /* BCMWAPI_WAI */
 #define WPA2_AUTH_MFP           0x1000  
 #define WPA2_AUTH_TPK		0x2000 	
 #define WPA2_AUTH_FT		0x4000 	
@@ -2483,21 +2423,6 @@ typedef struct assertlog_results {
 
 #define LOGRRC_FIX_LEN  8
 #define IOBUF_ALLOWED_NUM_OF_LOGREC(type, len) ((len - LOGRRC_FIX_LEN)/sizeof(type))
-
-#ifdef BCMWAPI_WAI
-#define IV_LEN 16 /* XXX, same as SMS4_WPI_PN_LEN */
-struct wapi_sta_msg_t
-{
-	uint16  msg_type;
-	uint16  datalen;
-	uint8   vap_mac[6];
-	uint8   reserve_data1[2];
-	uint8   sta_mac[6];
-	uint8   reserve_data2[2];
-	uint8   gsn[IV_LEN];
-	uint8   wie[256];
-};
-#endif /* BCMWAPI_WAI */
 
 
 

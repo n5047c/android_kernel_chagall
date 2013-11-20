@@ -170,7 +170,7 @@ const bcm_iovar_t dhd_iovars[] = {
 };
 
 struct dhd_cmn *
-dhd_common_init(osl_t *osh)
+dhd_common_init(uint16 devid, osl_t *osh)
 {
 	dhd_cmn_t *cmn;
 
@@ -191,15 +191,13 @@ dhd_common_init(osl_t *osh)
 #ifdef CONFIG_BCMDHD_FW_PATH
 	bcm_strncpy_s(fw_path, sizeof(fw_path), CONFIG_BCMDHD_FW_PATH, MOD_PARAM_PATHLEN-1);
 #elif defined(CONFIG_BCMDHD_FW_DIR)  /* CONFIG_BCMDHD_FW_PATH */
-	sprintf(fw_path, "%s/bcm4330/fw_bcmdhd.bin", CONFIG_BCMDHD_FW_DIR);
+	sprintf(fw_path, "%s/bcm%x/fw_bcmdhd.bin", CONFIG_BCMDHD_FW_DIR, devid);
 #else
 	fw_path[0] = '\0';
-#endif /* CONFIG_BCMDHD_FW_PATH */
+#endif /* CONFIG_BCMDHD_FW_DIR */
 #ifdef CONFIG_BCMDHD_NVRAM_PATH
 	bcm_strncpy_s(nv_path, sizeof(nv_path), CONFIG_BCMDHD_NVRAM_PATH, MOD_PARAM_PATHLEN-1);
-#elif defined(CONFIG_BCMDHD_NVRAM_DIR) /* CONFIG_BCMDHD_NVRAM_PATH */
-	sprintf(nv_path, "%s/nvram_4330.txt", CONFIG_BCMDHD_NVRAM_DIR);
-#else
+#else /* CONFIG_BCMDHD_NVRAM_PATH */
 	nv_path[0] = '\0';
 #endif /* CONFIG_BCMDHD_NVRAM_PATH */
 #ifdef SOFTAP
@@ -1252,7 +1250,7 @@ dhd_pktfilter_offload_enable(dhd_pub_t * dhd, char *arg, int enable, int master_
 	rc = dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, buf, buf_len, TRUE, 0);
 	rc = rc >= 0 ? 0 : rc;
 	if (rc)
-		DHD_ERROR(("%s: failed to add pktfilter %s, retcode = %d\n",
+		DHD_TRACE(("%s: failed to add pktfilter %s, retcode = %d\n",
 		__FUNCTION__, arg, rc));
 	else
 		DHD_TRACE(("%s: successfully added pktfilter %s\n",
@@ -1263,7 +1261,7 @@ dhd_pktfilter_offload_enable(dhd_pub_t * dhd, char *arg, int enable, int master_
 	rc = dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, buf, sizeof(buf), TRUE, 0);
 	rc = rc >= 0 ? 0 : rc;
 	if (rc)
-		DHD_ERROR(("%s: failed to add pktfilter %s, retcode = %d\n",
+		DHD_TRACE(("%s: failed to add pktfilter %s, retcode = %d\n",
 		__FUNCTION__, arg, rc));
 
 fail:
@@ -1394,7 +1392,7 @@ dhd_pktfilter_offload_set(dhd_pub_t * dhd, char *arg)
 	rc = rc >= 0 ? 0 : rc;
 
 	if (rc)
-		DHD_ERROR(("%s: failed to add pktfilter %s, retcode = %d\n",
+		DHD_TRACE(("%s: failed to add pktfilter %s, retcode = %d\n",
 		__FUNCTION__, arg, rc));
 	else
 		DHD_TRACE(("%s: successfully added pktfilter %s\n",
@@ -2194,7 +2192,7 @@ int dhd_keep_alive_onoff(dhd_pub_t *dhd)
 	mkeep_alive_pkt.keep_alive_id = 0;
 	mkeep_alive_pkt.len_bytes = 0;
 	buf_len += WL_MKEEP_ALIVE_FIXED_LEN;
-	/* Keep-alive attributes are set in local	variable (mkeep_alive_pkt), and
+	/* Keep-alive attributes are set in local variable (mkeep_alive_pkt), and
 	 * then memcpy'ed into buffer (mkeep_alive_pktp) since there is no
 	 * guarantee that the buffer is properly aligned.
 	 */

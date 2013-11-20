@@ -70,7 +70,7 @@ typedef struct bcm_static_pkt {
 } bcm_static_pkt_t;
 
 static bcm_static_pkt_t *bcm_static_skb = 0;
-#endif 
+#endif
 
 typedef struct bcm_mem_link {
 	struct bcm_mem_link *prev;
@@ -215,11 +215,10 @@ osl_attach(void *pdev, uint bustype, bool pkttag)
 	if (!bcm_static_buf) {
 		if (!(bcm_static_buf = (bcm_static_buf_t *)dhd_os_prealloc(osh, 3, STATIC_BUF_SIZE+
 			STATIC_BUF_TOTAL_LEN))) {
-			printk("can not alloc static buf!\n");
+			printf("can not alloc static buf!\n");
 		}
 		else
-			printk("alloc static buf at %x!\n", (unsigned int)bcm_static_buf);
-
+			printf("alloc static buf at %x!\n", (unsigned int)bcm_static_buf);
 
 		sema_init(&bcm_static_buf->static_sem, 1);
 
@@ -238,7 +237,7 @@ osl_attach(void *pdev, uint bustype, bool pkttag)
 
 		sema_init(&bcm_static_skb->osl_pkt_sem, 1);
 	}
-#endif 
+#endif
 
 	return osh;
 }
@@ -451,7 +450,7 @@ osl_pktfastget(osl_t *osh, uint len)
 
 	return skb;
 }
-#endif 
+#endif
 
 
 void * BCMFASTPATH
@@ -460,15 +459,13 @@ osl_pktget(osl_t *osh, uint len)
 	struct sk_buff *skb;
 
 #ifdef CTFPOOL
-	
 	skb = osl_pktfastget(osh, len);
 	if ((skb != NULL) || ((skb = osl_alloc_skb(len)) != NULL)) {
-#else 
+#else
 	if ((skb = osl_alloc_skb(len))) {
-#endif 
+#endif
 		skb_put(skb, len);
 		skb->priority = 0;
-
 
 		osh->pub.pktalloced++;
 	}
@@ -551,14 +548,14 @@ osl_pktfree(osl_t *osh, void *p, bool send)
 }
 
 #ifdef CONFIG_DHD_USE_STATIC_BUF
-void*
+void *
 osl_pktget_static(osl_t *osh, uint len)
 {
 	int i;
 	struct sk_buff *skb;
 
 	if (!bcm_static_skb || (len > (PAGE_SIZE * 2))) {
-		printk("%s: attempt to allocate huge packet (0x%x)\n", __FUNCTION__, len);
+		printf("%s: attempt to allocate huge packet (0x%x)\n", __FUNCTION__, len);
 		return osl_pktget(osh, len);
 	}
 
@@ -596,7 +593,7 @@ osl_pktget_static(osl_t *osh, uint len)
 	}
 
 	up(&bcm_static_skb->osl_pkt_sem);
-	printk("%s: all static pkt in use!\n", __FUNCTION__);
+	printf("%s: all static pkt in use!\n", __FUNCTION__);
 	return osl_pktget(osh, len);
 }
 

@@ -116,10 +116,8 @@ dhdcdc_cmplt(dhd_pub_t *dhd, uint32 id, uint32 len)
 
 	do {
 		ret = dhd_bus_rxctl(dhd->bus, (uchar*)&prot->msg, cdc_len);
-		if (ret < 0) {
-			printk(KERN_ERR "%s : dhd_bus_rxctl failed (%d)\n", __func__, ret);
+		if (ret < 0)
 			break;
-		}
 	} while (CDC_IOC_ID(ltoh32(prot->msg.flags)) != id);
 
 	return ret;
@@ -255,10 +253,9 @@ dhdcdc_set_ioctl(dhd_pub_t *dhd, int ifidx, uint cmd, void *buf, uint len, uint8
 		goto done;
 	}
 
-	if ((ret = dhdcdc_cmplt(dhd, prot->reqid, len)) < 0) {
-		printk(KERN_ERR "%s : dhdcdc_cmplt failed (%d)\n", __func__, ret);
+	if ((ret = dhdcdc_cmplt(dhd, prot->reqid, len)) < 0)
 		goto done;
-	}
+
 	flags = ltoh32(msg->flags);
 	id = (flags & CDCF_IOC_ID_MASK) >> CDCF_IOC_ID_SHIFT;
 
@@ -288,25 +285,11 @@ dhd_prot_ioctl(dhd_pub_t *dhd, int ifidx, wl_ioctl_t * ioc, void * buf, int len)
 	dhd_prot_t *prot = dhd->prot;
 	int ret = -1;
 	uint8 action;
-#if defined(BCMNDIS6)
-	bool acquired = FALSE;
-#endif /* BCMNDIS6 */
+
 	if ((dhd->busstate == DHD_BUS_DOWN) || dhd->hang_was_sent) {
 		DHD_ERROR(("%s : bus is down. we have nothing to do\n", __FUNCTION__));
 		goto done;
 	}
-#if defined(BCMNDIS6)
-	if (dhd_os_proto_block(dhd))
-	{
-		acquired = TRUE;
-	}
-	else
-	{
-		/* attempt to acquire protocol mutex timed out. */
-		ret = -1;
-		return ret;
-	}
-#endif /* BCMNDIS6 */
 
 	DHD_TRACE(("%s: Enter\n", __FUNCTION__));
 
@@ -357,16 +340,6 @@ dhd_prot_ioctl(dhd_pub_t *dhd, int ifidx, wl_ioctl_t * ioc, void * buf, int len)
 	prot->pending = FALSE;
 
 done:
-#if defined(BCMNDIS6)
-	if (acquired)
-	   dhd_os_proto_unblock(dhd);
-#endif /* BCMNDIS6 */
-	if (ret < 0){
-		printk(KERN_ERR "%s : ret (%d)\n", __func__, ret);
-		if ((ioc->cmd == WLC_SET_VAR) || (ioc->cmd == WLC_GET_VAR)) {
-			DHD_ERROR(("iovar cmd=%s\n", (char*)buf));
-			}
-		}
 	return ret;
 }
 

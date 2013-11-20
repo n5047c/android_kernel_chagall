@@ -121,7 +121,7 @@ typedef irqreturn_t(*FN_ISR) (int irq, void *dev_id, struct pt_regs *ptregs);
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 17)
 #ifdef	CONFIG_NET_RADIO
-#define	CONFIG_WIRELESS_EXT
+#define	CONFIG_BCMDHD_WEXT
 #endif
 #endif	
 
@@ -477,7 +477,7 @@ typedef struct {
 
 
 #ifdef DHD_DEBUG
-#define DBG_THR(x) printk x
+#define DBG_THR(x) printf x
 #else
 #define DBG_THR(x)
 #endif
@@ -511,19 +511,18 @@ typedef struct {
 	(tsk_ctl)->thr_pid = -1; \
 }
 
-
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 0))
 #define DAEMONIZE(a) daemonize(a); \
 	allow_signal(SIGKILL); \
 	allow_signal(SIGTERM);
-#else 
+#else /* Linux 2.4 (w/o preemption patch) */
 #define RAISE_RX_SOFTIRQ() \
 	cpu_raise_softirq(smp_processor_id(), NET_RX_SOFTIRQ)
 #define DAEMONIZE(a) daemonize(); \
 	do { if (a) \
 		strncpy(current->comm, a, MIN(sizeof(current->comm), (strlen(a) + 1))); \
 	} while (0);
-#endif 
+#endif /* LINUX_VERSION_CODE  */
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 0))
 #define BLOCKABLE()	(!in_atomic())

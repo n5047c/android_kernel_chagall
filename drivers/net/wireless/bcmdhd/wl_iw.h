@@ -202,12 +202,6 @@ extern int wl_iw_get_wireless_stats(struct net_device *dev, struct iw_statistics
 int wl_iw_attach(struct net_device *dev, void * dhdp);
 void wl_iw_detach(void);
 
-#ifndef DHD_PACKET_TIMEOUT_MS
-#define DHD_PACKET_TIMEOUT_MS	1000
-#endif
-#ifndef DHD_EVENT_TIMEOUT_MS
-#define DHD_EVENT_TIMEOUT_MS	2000
-#endif
 extern int net_os_wake_lock(struct net_device *dev);
 extern int net_os_wake_unlock(struct net_device *dev);
 extern int net_os_wake_lock_timeout(struct net_device *dev);
@@ -320,6 +314,6 @@ extern int wl_iw_parse_channel_list(char** list_str, uint16* channel_list, int c
 #define WPS_ADD_PROBE_REQ_IE_CMD "ADD_WPS_PROBE_REQ_IE "
 #define WPS_DEL_PROBE_REQ_IE_CMD "DEL_WPS_PROBE_REQ_IE "
 #define WPS_PROBE_REQ_IE_CMD_LENGTH 21
-#endif 
+#endif
 
 #endif 
