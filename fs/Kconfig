@@ -287,4 +287,8 @@ config DYNAMIC_FSYNC
         help
           An experimental file sync control using Android's early suspend / late resume drivers
 
+# samsungs exfat driver
+
+source "fs/exfat/Kconfig"
+
 endmenu
