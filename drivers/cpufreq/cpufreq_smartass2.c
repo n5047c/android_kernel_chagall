@@ -43,7 +43,7 @@
  * towards the ideal frequency and slower after it has passed it. Similarly,
  * lowering the frequency towards the ideal frequency is faster than below it.
  */
-#define DEFAULT_AWAKE_IDEAL_FREQ 860000
+#define DEFAULT_AWAKE_IDEAL_FREQ 1000000
 static unsigned int awake_ideal_freq;
 
 /*
@@ -686,15 +686,16 @@ static int cpufreq_governor_smartass(struct cpufreq_policy *new_policy,
 
 		// Do not register the idle hook and create sysfs
 		// entries if we have already done so.
-		if (atomic_inc_return(&active_count) <= 1) {
-			rc = sysfs_create_group(cpufreq_global_kobject,
-						&smartass_attr_group);
-			if (rc)
-				return rc;
-
-			pm_idle_old = pm_idle;
-			pm_idle = cpufreq_idle;
+		if (atomic_inc_return(&active_count) > 1) {
+			return 0;
 		}
+		rc = sysfs_create_group(cpufreq_global_kobject,
+						&smartass_attr_group);
+		if (rc)
+			return rc;
+
+		pm_idle_old = pm_idle;
+		pm_idle = cpufreq_idle;
 
 		if (this_smartass->cur_policy->cur < new_policy->max && !timer_pending(&this_smartass->timer))
 			reset_timer(cpu,this_smartass);
@@ -727,11 +728,12 @@ static int cpufreq_governor_smartass(struct cpufreq_policy *new_policy,
 		flush_work(&freq_scale_work);
 		this_smartass->idle_exit_time = 0;
 
-		if (atomic_dec_return(&active_count) <= 1) {
-			sysfs_remove_group(cpufreq_global_kobject,
-					   &smartass_attr_group);
-			pm_idle = pm_idle_old;
+		if (atomic_dec_return(&active_count) > 0) {
+			return 0;
 		}
+		sysfs_remove_group(cpufreq_global_kobject,
+					   &smartass_attr_group);
+		pm_idle = pm_idle_old;
 		break;
 	}
 
@@ -835,9 +837,12 @@ static int __init cpufreq_smartass_init(void)
 
 	// Scale up is high priority
 	up_wq = alloc_workqueue("ksmartass_up", WQ_HIGHPRI, 1);
+	if (!up_wq) return -ENOMEM;
 	down_wq = alloc_workqueue("ksmartass_down", 0, 1);
-	if (!up_wq || !down_wq)
+	if (!down_wq) {
+		destroy_workqueue(up_wq);
 		return -ENOMEM;
+	}
 
 	INIT_WORK(&freq_scale_work, cpufreq_smartass_freq_change_time_work);
 

@@ -19,6 +19,7 @@ deps_config := \
 	mm/Kconfig.debug \
 	lib/Kconfig.debug \
 	arch/arm/Kconfig.debug \
+	fs/exfat/Kconfig \
 	fs/dlm/Kconfig \
 	fs/nls/Kconfig \
 	fs/partitions/Kconfig \

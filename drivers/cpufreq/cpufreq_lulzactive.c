@@ -1214,7 +1214,7 @@ static int __init cpufreq_lulzactive_init(void)
 	}
 
 	up_task = kthread_create(cpufreq_lulzactive_up_task, NULL,
-                             "klulzactiveup");
+                             "klulzactive_up");
 	if (IS_ERR(up_task))
 		return PTR_ERR(up_task);
 
@@ -1223,7 +1223,7 @@ static int __init cpufreq_lulzactive_init(void)
 
 	/* No rescuer thread, bind to CPU queuing the work for possibly
      warm cache (probably doesn't matter much). */
-	down_wq = create_workqueue("klulzactive_down");
+	down_wq = alloc_workqueue("klulzactive_down", 0, 1);
 
 	if (! down_wq)
 		goto err_freeuptask;
