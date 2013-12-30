@@ -41,7 +41,7 @@
 
 static void (*wifi_status_cb)(int card_present, void *dev_id);
 static void *wifi_status_cb_devid;
-static int chagall_wifi_status_register(void (*callback)(int , void *), void *);
+static int chagall_wifi_status_register(void (*callback)(int, void *), void *);
 
 static int chagall_wifi_reset(int on);
 static int chagall_wifi_power(int on);
@@ -58,7 +58,8 @@ typedef struct cntry_locales_custom {
 
 static cntry_locales_custom_t chagall_wifi_translate_custom_table[] = {
 /* Table should be filled out based on custom platform regulatory requirement */
-	{"RU", "XY", 4}
+	{"RU", "XY", 4},
+	{"IR", "XY", 4}
 };
 
 static void *chagall_wifi_get_country_code(char *ccode)
