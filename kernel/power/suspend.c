@@ -207,6 +207,10 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
 		goto Platform_wake;
 	}
 
+	error = disable_nonboot_cpus();
+	if (error || suspend_test(TEST_CPUS))
+		goto Enable_cpus;
+
 	arch_suspend_disable_irqs();
 	BUG_ON(!irqs_disabled());
 
@@ -222,6 +226,9 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
 
 	arch_suspend_enable_irqs();
 	BUG_ON(irqs_disabled());
+
+ Enable_cpus:
+	enable_nonboot_cpus();
 
  Platform_wake:
 	if (need_suspend_ops(state) && suspend_ops->wake)
