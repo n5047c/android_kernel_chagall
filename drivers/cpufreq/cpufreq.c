@@ -32,6 +32,7 @@
 #include <linux/pm_qos_params.h>
 #include <linux/kernel_stat.h>
 #include <linux/tick.h>
+#include "../../arch/arm/mach-tegra/dvfs.h"
 
 #include <trace/events/power.h>
 
@@ -747,18 +748,17 @@ static ssize_t store_gpu_oc(struct cpufreq_policy *policy, const char *buf, size
 	struct clk *pll_c = tegra_get_clock_by_name("pll_c");
 
 	unsigned int array_size = three_d->dvfs->num_freqs;
-	char cur_size[array_size];
 
 	i = array_size;
-	if (i <= 0) 
+	if (i <= 0)
 		return -EINVAL;
 
 	ret = sscanf(buf, "%lu", &gpu_freq);
 	if (ret == 0)
 		return -EINVAL;
 
-	if (gpu_freq > 650 || gpu_freq < 520) {
-		pr_info("GPU clock range is 520-650 MHz. Tried to set %lu\n",gpu_freq);
+	if (gpu_freq > 700 || gpu_freq < 400) {
+		pr_info("GPU clock range is 400-700 MHz. Tried to set %lu\n",gpu_freq);
 		return -EINVAL;
 	}
 
@@ -774,10 +774,22 @@ static ssize_t store_gpu_oc(struct cpufreq_policy *policy, const char *buf, size
 	three_d2->max_rate = new_gpu_freq;
 	se->max_rate = new_gpu_freq;
 	cbus->max_rate = new_gpu_freq;
-	host1x->max_rate = new_gpu_freq;
-	pll_c->max_rate = new_gpu_freq;
+	host1x->max_rate = DIV_ROUND_UP((new_gpu_freq),2);
+	pll_c->max_rate = (new_gpu_freq*2);
 
 	for (i--; i >= 5; i--) {
+		if (gpu_freq < 600) {
+			vde->dvfs->millivolts[i] = 1250;
+		}
+
+		if (gpu_freq >= 600 && gpu_freq < 700) {
+			vde->dvfs->millivolts[i] = 1400;
+		}
+
+		if (gpu_freq >= 700) {
+			vde->dvfs->millivolts[i] = 1550;
+		}
+
 		vde->dvfs->freqs[i] = new_gpu_freq;
 		mpe->dvfs->freqs[i] = new_gpu_freq;
 		two_d->dvfs->freqs[i] = new_gpu_freq;
@@ -786,17 +798,9 @@ static ssize_t store_gpu_oc(struct cpufreq_policy *policy, const char *buf, size
 		three_d2->dvfs->freqs[i] = new_gpu_freq;
 		se->dvfs->freqs[i] = new_gpu_freq;
 		cbus->dvfs->freqs[i] = new_gpu_freq;
-		host1x->dvfs->freqs[i] = new_gpu_freq;
 		pll_c->dvfs->freqs[i] = new_gpu_freq;
 	}
 
-	ret = sscanf(buf, "%s", cur_size);
-
-	if (ret == 0)
-		return -EINVAL;
-
-	buf += (strlen(cur_size) + 1);
-	
 	rcu_read_unlock();
 
 	return count;
