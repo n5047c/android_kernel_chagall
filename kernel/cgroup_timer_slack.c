@@ -238,7 +238,6 @@ struct cgroup_subsys timer_slack_subsys = {
 	.destroy	= tslack_destroy,
 	.allow_attach	= tslack_allow_attach,
 	.populate	= tslack_populate,
-	.allow_attach	= tslack_allow_attach,
 };
 
 unsigned long task_get_effective_timer_slack(struct task_struct *tsk)
