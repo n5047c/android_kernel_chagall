@@ -416,7 +416,7 @@ static struct switch_dev tegra_wm8903_headset_switch = {
 };
 
 static struct switch_dev tegra_wm8903_lineout_switch = {
-	.name = "usb_audio",
+	.name = "usb_audio2",
 };
 
 bool headset_mic_detect(void)
