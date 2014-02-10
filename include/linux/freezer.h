@@ -130,6 +130,7 @@ static inline void freezer_count(void)
  * test whether a task should be skipped when determining the target frozen
  * state is reached.  IOW, if this function returns %true, @p is considered
  * frozen enough.
+ */
 static inline bool freezer_should_skip(struct task_struct *p)
 {
 	/*
