@@ -51,18 +51,7 @@ extern void refrigerator(void);
 extern int freeze_processes(void);
 extern void thaw_processes(void);
 
-/*
- * HACK: prevent sleeping while atomic warnings due to ARM signal handling
- * disabling irqs
- */
-static inline bool try_to_freeze_nowarn(void)
-{
-	if (likely(!freezing(current)))
-		return false;
-	return __refrigerator(false);
-}
-
-static inline bool try_to_freeze(void)
+static inline int try_to_freeze(void)
 {
 	if (freezing(current)) {
 		refrigerator();
@@ -141,7 +130,6 @@ static inline void freezer_count(void)
  * test whether a task should be skipped when determining the target frozen
  * state is reached.  IOW, if this function returns %true, @p is considered
  * frozen enough.
- */
 static inline bool freezer_should_skip(struct task_struct *p)
 {
 	/*
@@ -213,11 +201,11 @@ static inline void refrigerator(void) {}
 static inline int freeze_processes(void) { BUG(); return 0; }
 static inline void thaw_processes(void) {}
 
-static inline bool try_to_freeze(void) { return 0; }
+static inline int try_to_freeze(void) { return 0; }
 
 static inline void freezer_do_not_count(void) {}
 static inline void freezer_count(void) {}
-static inline bool freezer_should_skip(struct task_struct *p) { return 0; }
+static inline int freezer_should_skip(struct task_struct *p) { return 0; }
 static inline void set_freezable(void) {}
 static inline void set_freezable_with_signal(void) {}
 
