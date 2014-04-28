@@ -28,7 +28,6 @@
 #include <linux/cpu.h>
 #include <linux/completion.h>
 #include <linux/mutex.h>
-#include <linux/sched.h>
 #include <linux/syscore_ops.h>
 #include <linux/pm_qos_params.h>
 #include <linux/kernel_stat.h>
@@ -1721,12 +1720,6 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
 
 	if (cpu_online(policy->cpu) && cpufreq_driver->target)
 		retval = cpufreq_driver->target(policy, target_freq, relation);
-	if (likely(retval != -EINVAL)) {
-		if (target_freq == policy->max)
-			cpu_nonscaling(policy->cpu);
-		else
-			cpu_scaling(policy->cpu);
-	}
 	trace_cpu_scale(policy->cpu, target_freq, POWER_CPU_SCALE_DONE);
 
 	return retval;
