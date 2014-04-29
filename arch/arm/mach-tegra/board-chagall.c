@@ -255,9 +255,11 @@ static struct platform_device chagall_bluesleep_device = {
 	.resource       = chagall_bluesleep_resources,
 };
 
+extern void bluesleep_setup_uart_port(struct platform_device *uart_dev);
 static noinline void __init chagall_setup_bluesleep(void)
 {
 	platform_device_register(&chagall_bluesleep_device);
+	bluesleep_setup_uart_port(&tegra_uartc_device);
 	return;
 }
 
