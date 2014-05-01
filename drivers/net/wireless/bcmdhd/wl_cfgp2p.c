@@ -356,11 +356,11 @@ wl_cfgp2p_ifadd(struct wl_priv *wl, struct ether_addr *mac, u8 if_type,
 		wl->ioctl_buf, WLC_IOCTL_MAXLEN, &wl->ioctl_buf_sync);
 
 	if (unlikely(err < 0)) {
-		printf("'wl p2p_ifadd' error %d\n", err);
+		printk("'wl p2p_ifadd' error %d\n", err);
 	} else if (if_type == WL_P2P_IF_GO) {
 		err = wldev_ioctl(ndev, WLC_SET_SCB_TIMEOUT, &scb_timeout, sizeof(u32), true);
 		if (unlikely(err < 0))
-			printf("'wl scb_timeout' error %d\n", err);
+			printk("'wl scb_timeout' error %d\n", err);
 	}
 
 	return err;
@@ -383,7 +383,7 @@ wl_cfgp2p_ifdel(struct wl_priv *wl, struct ether_addr *mac)
 	ret = wldev_iovar_setbuf(netdev, "p2p_ifdel", mac, sizeof(*mac),
 		wl->ioctl_buf, WLC_IOCTL_MAXLEN, &wl->ioctl_buf_sync);
 	if (unlikely(ret < 0)) {
-		printf("'wl p2p_ifdel' error %d\n", ret);
+		printk("'wl p2p_ifdel' error %d\n", ret);
 	}
 	return ret;
 }
@@ -416,11 +416,11 @@ wl_cfgp2p_ifchange(struct wl_priv *wl, struct ether_addr *mac, u8 if_type,
 		wl->ioctl_buf, WLC_IOCTL_MAXLEN, &wl->ioctl_buf_sync);
 
 	if (unlikely(err < 0)) {
-		printf("'wl p2p_ifupd' error %d\n", err);
+		printk("'wl p2p_ifupd' error %d\n", err);
 	} else if (if_type == WL_P2P_IF_GO) {
 		err = wldev_ioctl(netdev, WLC_SET_SCB_TIMEOUT, &scb_timeout, sizeof(u32), true);
 		if (unlikely(err < 0))
-			printf("'wl scb_timeout' error %d\n", err);
+			printk("'wl scb_timeout' error %d\n", err);
 	}
 	return err;
 }
@@ -933,8 +933,7 @@ wl_cfgp2p_set_management_ie(struct wl_priv *wl, struct net_device *ndev, s32 bss
 				return -1;
 		}
 		bssidx = 0;
-	} else if (bssidx == -1 && (wl_get_mode_by_netdev(wl, ndev) == WL_MODE_BSS
-			|| wl_get_mode_by_netdev(wl, ndev) == WL_MODE_IBSS)) {
+	} else if (bssidx == -1 && wl_get_mode_by_netdev(wl, ndev) == WL_MODE_BSS) {
 		switch (pktflag) {
 			case VNDR_IE_PRBREQ_FLAG :
 				mgmt_ie_buf = wl->sta_info->probe_req_ie;
@@ -1759,6 +1758,10 @@ wl_cfgp2p_set_p2p_ps(struct wl_priv *wl, struct net_device *ndev, char* buf, int
 
 		if (legacy_ps != -1) {
 			s32 pm = legacy_ps ? PM_MAX : PM_OFF;
+#if defined(SUPPORT_PM2_ONLY)
+			if (pm == PM_MAX)
+				pm = PM_FAST;
+#endif /* SUPPORT_PM2_ONLY */
 			ret = wldev_ioctl(wl_to_p2p_bss_ndev(wl, P2PAPI_BSSCFG_CONNECTION),
 				WLC_SET_PM, &pm, sizeof(pm), true);
 			if (unlikely(ret)) {
@@ -1933,7 +1936,7 @@ wl_cfgp2p_register_ndev(struct wl_priv *wl)
 		goto fail;
 	}
 
-	printf("%s: P2P Interface Registered\n", net->name);
+	printk("%s: P2P Interface Registered\n", net->name);
 
 	return ret;
 fail:
