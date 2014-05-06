@@ -10,10 +10,10 @@ config BCMDHD
 	  If you choose to build a module, it'll be called dhd. Say M if
 	  unsure.
 
-config BCMDHD_FW_DIR
+config BCMDHD_FW_PATH
 	depends on BCMDHD
 	string "Firmware path"
-	default "/system/vendor/firmware"
+	default "/system/vendor/firmware/bcm4330/fw_bcmdhd.bin"
 	---help---
 	  Path to the firmware file.
 

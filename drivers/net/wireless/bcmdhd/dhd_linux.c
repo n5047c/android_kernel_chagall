@@ -308,9 +308,11 @@ typedef struct dhd_info {
 char firmware_path[MOD_PARAM_PATHLEN];
 char nvram_path[MOD_PARAM_PATHLEN];
 
-/* load firmware and/or nvram values from the filesystem */
+/* load firmware and/or nvram values from the filesystem
+ * Don't used in current configuration (JB 4.1) and maybe will use for CM 10.1
 module_param_string(firmware_path, firmware_path, MOD_PARAM_PATHLEN, 0660);
 module_param_string(nvram_path, nvram_path, MOD_PARAM_PATHLEN, 0);
+*/
 
 char info_string[MOD_PARAM_INFOLEN];
 module_param_string(info_string, info_string, MOD_PARAM_INFOLEN, 0444);
