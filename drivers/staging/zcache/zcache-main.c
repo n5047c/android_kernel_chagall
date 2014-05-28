@@ -717,7 +717,7 @@ static unsigned long zv_create(struct zs_pool *pool, uint32_t pool_id,
 		goto out;
 	zv_curr_dist_counts[chunks]++;
 	zv_cumul_dist_counts[chunks]++;
-	zv = zs_map_object(pool, handle);
+	zv = zs_map_object(pool, handle, ZS_MM_WO);
 	zv->index = index;
 	zv->oid = *oid;
 	zv->pool_id = pool_id;
@@ -736,7 +736,7 @@ static void zv_free(struct zs_pool *pool, unsigned long handle)
 	uint16_t size;
 	int chunks;
 
-	zv = zs_map_object(pool, handle);
+	zv = zs_map_object(pool, handle, ZS_MM_RW);
 	ASSERT_SENTINEL(zv, ZVH);
 	size = zv->size + sizeof(struct zv_hdr);
 	INVERT_SENTINEL(zv, ZVH);
@@ -758,7 +758,7 @@ static void zv_decompress(struct page *page, unsigned long handle)
 	int ret;
 	struct zv_hdr *zv;
 
-	zv = zs_map_object(zcache_host.zspool, handle);
+	zv = zs_map_object(zcache_host.zspool, handle, ZS_MM_RO);
 	BUG_ON(zv->size == 0);
 	ASSERT_SENTINEL(zv, ZVH);
 	to_va = kmap_atomic(page);
