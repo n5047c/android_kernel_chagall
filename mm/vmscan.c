@@ -1612,6 +1612,8 @@ zone_id_shrink_pagelist(struct zone *zone, struct list_head *page_list)
 	unsigned long nr_reclaimed = 0;
 	unsigned long nr_anon;
 	unsigned long nr_file;
+	unsigned long nr_dirty = 0;
+	unsigned long nr_writeback = 0;
 
 	struct scan_control sc = {
 		.gfp_mask = GFP_USER,
@@ -1628,7 +1630,7 @@ zone_id_shrink_pagelist(struct zone *zone, struct list_head *page_list)
 	update_isolated_counts(zone, &sc, &nr_anon, &nr_file, page_list);
 	spin_unlock_irq(&zone->lru_lock);
 
-	nr_reclaimed = shrink_page_list(page_list, zone, &sc);
+	nr_reclaimed = shrink_page_list(page_list, zone, &sc, DEF_PRIORITY, &nr_dirty, &nr_writeback);
 	__count_zone_vm_events(PGSTEAL, zone, nr_reclaimed);
 	putback_lru_pages(zone, &sc, nr_anon, nr_file, page_list);
 

@@ -117,6 +117,7 @@ deps_config := \
 	drivers/staging/sm7xx/Kconfig \
 	drivers/staging/wlags49_h25/Kconfig \
 	drivers/staging/wlags49_h2/Kconfig \
+	drivers/staging/zsmalloc/Kconfig \
 	drivers/staging/zcache/Kconfig \
 	drivers/staging/zram/Kconfig \
 	drivers/staging/snappy/Kconfig \
