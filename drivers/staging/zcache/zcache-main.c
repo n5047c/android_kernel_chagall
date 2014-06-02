@@ -43,6 +43,8 @@
 #include <linux/frontswap.h>
 #endif
 
+#define ZCACHE_COMPRESSOR_DEFAULT "lzo"
+
 #if 0
 /* this is more aggressive but may cause other problems? */
 #define ZCACHE_GFP_MASK	(GFP_ATOMIC | __GFP_NORETRY | __GFP_NOWARN)
@@ -401,8 +403,8 @@ static struct zbud_hdr *zbud_create(uint16_t client_id, uint16_t pool_id,
 	if (unlikely(zbpg == NULL))
 		goto out;
 	/* ok, have a page, now compress the data before taking locks */
-	spin_lock(&zbpg->lock);
 	spin_lock(&zbud_budlists_spinlock);
+	spin_lock(&zbpg->lock);
 	list_add_tail(&zbpg->bud_list, &zbud_unbuddied[nchunks].list);
 	zbud_unbuddied[nchunks].count++;
 	zh = &zbpg->buddy[0];
@@ -432,12 +434,11 @@ init_zh:
 	zh->oid = *oid;
 	zh->pool_id = pool_id;
 	zh->client_id = client_id;
-	/* can wait to copy the data until the list locks are dropped */
-	spin_unlock(&zbud_budlists_spinlock);
-
 	to = zbud_data(zh, size);
 	memcpy(to, cdata, size);
 	spin_unlock(&zbpg->lock);
+	spin_unlock(&zbud_budlists_spinlock);
+
 	zbud_cumul_chunk_counts[nchunks]++;
 	atomic_inc(&zcache_zbud_curr_zpages);
 	zcache_zbud_cumul_zpages++;
@@ -698,8 +699,8 @@ static unsigned int zv_max_zsize = (PAGE_SIZE / 8) * 7;
  */
 static unsigned int zv_max_mean_zsize = (PAGE_SIZE / 8) * 5;
 
-static unsigned long zv_curr_dist_counts[NCHUNKS];
-static unsigned long zv_cumul_dist_counts[NCHUNKS];
+static atomic_t zv_curr_dist_counts[NCHUNKS];
+static atomic_t zv_cumul_dist_counts[NCHUNKS];
 
 static unsigned long zv_create(struct zs_pool *pool, uint32_t pool_id,
 				struct tmem_oid *oid, uint32_t index,
@@ -715,8 +716,8 @@ static unsigned long zv_create(struct zs_pool *pool, uint32_t pool_id,
 	handle = zs_malloc(pool, size);
 	if (!handle)
 		goto out;
-	zv_curr_dist_counts[chunks]++;
-	zv_cumul_dist_counts[chunks]++;
+	atomic_inc(&zv_curr_dist_counts[chunks]);
+	atomic_inc(&zv_cumul_dist_counts[chunks]);
 	zv = zs_map_object(pool, handle, ZS_MM_WO);
 	zv->index = index;
 	zv->oid = *oid;
@@ -744,7 +745,7 @@ static void zv_free(struct zs_pool *pool, unsigned long handle)
 
 	chunks = (size + (CHUNK_SIZE - 1)) >> CHUNK_SHIFT;
 	BUG_ON(chunks >= NCHUNKS);
-	zv_curr_dist_counts[chunks]--;
+	atomic_dec(&zv_curr_dist_counts[chunks]);
 
 	local_irq_save(flags);
 	zs_free(pool, handle);
@@ -781,7 +782,7 @@ static int zv_curr_dist_counts_show(char *buf)
 	char *p = buf;
 
 	for (i = 0; i < NCHUNKS; i++) {
-		n = zv_curr_dist_counts[i];
+		n = atomic_read(&zv_curr_dist_counts[i]);
 		p += sprintf(p, "%lu ", n);
 		chunks += n;
 		sum_total_chunks += i * n;
@@ -797,7 +798,7 @@ static int zv_cumul_dist_counts_show(char *buf)
 	char *p = buf;
 
 	for (i = 0; i < NCHUNKS; i++) {
-		n = zv_cumul_dist_counts[i];
+		n = atomic_read(&zv_cumul_dist_counts[i]);
 		p += sprintf(p, "%lu ", n);
 		chunks += n;
 		sum_total_chunks += i * n;
@@ -830,7 +831,7 @@ static ssize_t zv_max_zsize_store(struct kobject *kobj,
 	if (!capable(CAP_SYS_ADMIN))
 		return -EPERM;
 
-	err = strict_strtoul(buf, 10, &val);
+	err = kstrtoul(buf, 10, &val);
 	if (err || (val == 0) || (val > (PAGE_SIZE / 8) * 7))
 		return -EINVAL;
 	zv_max_zsize = val;
@@ -862,7 +863,7 @@ static ssize_t zv_max_mean_zsize_store(struct kobject *kobj,
 	if (!capable(CAP_SYS_ADMIN))
 		return -EPERM;
 
-	err = strict_strtoul(buf, 10, &val);
+	err = kstrtoul(buf, 10, &val);
 	if (err || (val == 0) || (val > (PAGE_SIZE / 8) * 7))
 		return -EINVAL;
 	zv_max_mean_zsize = val;
@@ -896,7 +897,7 @@ static ssize_t zv_page_count_policy_percent_store(struct kobject *kobj,
 	if (!capable(CAP_SYS_ADMIN))
 		return -EPERM;
 
-	err = strict_strtoul(buf, 10, &val);
+	err = kstrtoul(buf, 10, &val);
 	if (err || (val == 0) || (val > 150))
 		return -EINVAL;
 	zv_page_count_policy_percent = val;
@@ -997,15 +998,6 @@ out:
 static unsigned long zcache_failed_get_free_pages;
 static unsigned long zcache_failed_alloc;
 static unsigned long zcache_put_to_flush;
-static unsigned long zcache_aborted_preload;
-static unsigned long zcache_aborted_shrink;
-
-/*
- * Ensure that memory allocation requests in zcache don't result
- * in direct reclaim requests via the shrinker, which would cause
- * an infinite loop.  Maybe a GFP flag would be better?
- */
-static DEFINE_SPINLOCK(zcache_direct_reclaim_lock);
 
 /*
  * for now, used named slabs so can easily track usage; later can
@@ -1396,8 +1388,14 @@ static int zcache_cpu_notifier(struct notifier_block *nb,
 			kp->objnodes[kp->nr - 1] = NULL;
 			kp->nr--;
 		}
-		kmem_cache_free(zcache_obj_cache, kp->obj);
-		free_page((unsigned long)kp->page);
+		if (kp->obj) {
+			kmem_cache_free(zcache_obj_cache, kp->obj);
+			kp->obj = NULL;
+		}
+		if (kp->page) {
+			free_page((unsigned long)kp->page);
+			kp->page = NULL;
+		}
 		break;
 	default:
 		break;
@@ -1462,8 +1460,6 @@ ZCACHE_SYSFS_RO(evicted_buddied_pages);
 ZCACHE_SYSFS_RO(failed_get_free_pages);
 ZCACHE_SYSFS_RO(failed_alloc);
 ZCACHE_SYSFS_RO(put_to_flush);
-ZCACHE_SYSFS_RO(aborted_preload);
-ZCACHE_SYSFS_RO(aborted_shrink);
 ZCACHE_SYSFS_RO(compress_poor);
 ZCACHE_SYSFS_RO(mean_compress_poor);
 ZCACHE_SYSFS_RO_ATOMIC(zbud_curr_raw_pages);
@@ -1505,8 +1501,6 @@ static struct attribute *zcache_attrs[] = {
 	&zcache_failed_get_free_pages_attr.attr,
 	&zcache_failed_alloc_attr.attr,
 	&zcache_put_to_flush_attr.attr,
-	&zcache_aborted_preload_attr.attr,
-	&zcache_aborted_shrink_attr.attr,
 	&zcache_zbud_unbuddied_list_counts_attr.attr,
 	&zcache_zbud_cumul_chunk_counts_attr.attr,
 	&zcache_zv_curr_dist_counts_attr.attr,
@@ -1546,11 +1540,7 @@ static int shrink_zcache_memory(struct shrinker *shrink,
 		if (!(gfp_mask & __GFP_FS))
 			/* does this case really need to be skipped? */
 			goto out;
-		if (spin_trylock(&zcache_direct_reclaim_lock)) {
-			zbud_evict_pages(nr);
-			spin_unlock(&zcache_direct_reclaim_lock);
-		} else
-			zcache_aborted_shrink++;
+		zbud_evict_pages(nr);
 	}
 	ret = (int)atomic_read(&zcache_zbud_curr_raw_pages);
 out:
@@ -1816,9 +1806,9 @@ static int zcache_cleancache_init_shared_fs(char *uuid, size_t pagesize)
 static struct cleancache_ops zcache_cleancache_ops = {
 	.put_page = zcache_cleancache_put_page,
 	.get_page = zcache_cleancache_get_page,
-	.flush_page = zcache_cleancache_flush_page,
-	.flush_inode = zcache_cleancache_flush_inode,
-	.flush_fs = zcache_cleancache_flush_fs,
+	.invalidate_page = zcache_cleancache_flush_page,
+	.invalidate_inode = zcache_cleancache_flush_inode,
+	.invalidate_fs = zcache_cleancache_flush_fs,
 	.init_shared_fs = zcache_cleancache_init_shared_fs,
 	.init_fs = zcache_cleancache_init_fs
 };
@@ -1842,7 +1832,6 @@ static int zcache_frontswap_poolid = -1;
  * Setting SWIZ_BITS to 27 basically reconstructs the swap entry from
  * frontswap_load(), but has side-effects. Hence using 8.
  */
-
 #define SWIZ_BITS		8
 #define SWIZ_MASK		((1 << SWIZ_BITS) - 1)
 #define _oswiz(_type, _ind)	((_type << SWIZ_BITS) | (_ind & SWIZ_MASK))
@@ -1999,7 +1988,7 @@ static int __init zcache_comp_init(void)
 					zcache_comp_name);
 	}
 	if (!ret)
-		strcpy(zcache_comp_name, "lzo");
+		strcpy(zcache_comp_name, ZCACHE_COMPRESSOR_DEFAULT);
 	ret = crypto_has_comp(zcache_comp_name, 0, 0);
 	if (!ret) {
 		ret = 1;
