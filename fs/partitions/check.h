@@ -15,12 +15,14 @@ struct parsed_partitions {
 		int flags;
 		bool has_info;
 		struct partition_meta_info info;
-	} parts[DISK_MAX_PARTS];
+	} *parts;
 	int next;
 	int limit;
 	bool access_beyond_eod;
 	char *pp_buf;
 };
+
+void free_partitions(struct parsed_partitions *state);
 
 static inline void *read_part_sector(struct parsed_partitions *state,
 				     sector_t n, Sector *p)
