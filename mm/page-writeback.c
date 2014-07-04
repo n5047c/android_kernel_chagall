@@ -407,15 +407,9 @@ static unsigned long highmem_dirtyable_memory(unsigned long total)
 
 		x += zone_page_state(z, NR_FREE_PAGES) +
 		     zone_reclaimable_pages(z);
-		nr_pages = zone_page_state(z, NR_FREE_PAGES) +
-		  zone_reclaimable_pages(z);
-		/*
-		 * make sure that the number of pages for this node
-		 * is never "negative".
-		 */
-		nr_pages -= min(nr_pages, z->dirty_balance_reserve);
-		x += nr_pages;
 	}
+	if((long) x < 0)
+		x = 0;
 	/*
 	 * Make sure that the number of highmem pages is never larger
 	 * than the number of the total dirtyable memory. This can only
