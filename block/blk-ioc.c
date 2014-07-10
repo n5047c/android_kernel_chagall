@@ -17,12 +17,12 @@
  */
 static struct kmem_cache *iocontext_cachep;
 
-static void cfq_dtor(struct io_context *ioc)
+static void queue_data_dtor(struct io_context *ioc)
 {
 	if (!hlist_empty(&ioc->cic_list)) {
-		struct cfq_io_context *cic;
+		struct dev_io_context *cic;
 
-		cic = hlist_entry(ioc->cic_list.first, struct cfq_io_context,
+		cic = hlist_entry(ioc->cic_list.first, struct dev_io_context,
 								cic_list);
 		cic->dtor(ioc);
 	}
@@ -41,7 +41,7 @@ int put_io_context(struct io_context *ioc)
 
 	if (atomic_long_dec_and_test(&ioc->refcount)) {
 		rcu_read_lock();
-		cfq_dtor(ioc);
+		queue_data_dtor(ioc);
 		rcu_read_unlock();
 
 		kmem_cache_free(iocontext_cachep, ioc);
@@ -51,14 +51,14 @@ int put_io_context(struct io_context *ioc)
 }
 EXPORT_SYMBOL(put_io_context);
 
-static void cfq_exit(struct io_context *ioc)
+static void queue_data_exit(struct io_context *ioc)
 {
 	rcu_read_lock();
 
 	if (!hlist_empty(&ioc->cic_list)) {
-		struct cfq_io_context *cic;
+		struct dev_io_context *cic;
 
-		cic = hlist_entry(ioc->cic_list.first, struct cfq_io_context,
+		cic = hlist_entry(ioc->cic_list.first, struct dev_io_context,
 								cic_list);
 		cic->exit(ioc);
 	}
@@ -76,7 +76,7 @@ void exit_io_context(struct task_struct *task)
 	task_unlock(task);
 
 	if (atomic_dec_and_test(&ioc->nr_tasks))
-		cfq_exit(ioc);
+		queue_data_exit(ioc);
 
 	put_io_context(ioc);
 }

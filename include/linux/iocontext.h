@@ -30,21 +30,9 @@ struct cfq_ttime {
 };
 
 struct cfq_io_context {
-	void *key;
-
+	struct dev_io_context dev_ioc;
 	struct cfq_queue *cfqq[2];
-
-	struct io_context *ioc;
-
 	struct cfq_ttime ttime;
-
-	struct list_head queue_list;
-	struct hlist_node cic_list;
-
-	void (*dtor)(struct io_context *); /* destructor */
-	void (*exit)(struct io_context *); /* called on task exit */
-
-	struct rcu_head rcu_head;
 };
 
 /*
