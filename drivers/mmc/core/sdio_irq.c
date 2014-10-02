@@ -27,9 +27,8 @@
 
 #include "sdio_ops.h"
 
-static int process_sdio_pending_irqs(struct mmc_card *host)
+static int process_sdio_pending_irqs(struct mmc_card *card)
 {
-	struct mmc_card *card = host->card;
 	int i, ret, count;
 	unsigned char pending;
 	struct sdio_func *func;
@@ -40,7 +39,7 @@ static int process_sdio_pending_irqs(struct mmc_card *host)
 	 * Otherwise do the full probe.
 	 */
 	func = card->sdio_single_irq;
-	if (func && host->sdio_irq_pending) {
+	if(func) {
 		func->irq_handler(func);
 		return 1;
 	}
