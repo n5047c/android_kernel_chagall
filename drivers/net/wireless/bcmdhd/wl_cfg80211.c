@@ -6476,8 +6476,8 @@ static s32 wl_notify_escan_complete(struct wl_priv *wl,
 	if (timer_pending(&wl->scan_timeout))
 		del_timer_sync(&wl->scan_timeout);
 	spin_lock_irqsave(&wl->cfgdrv_lock, flags);
-
 #ifdef WL_SCHED_SCAN
+	if (wl->sched_scan_req && !wl->scan_request) {
 		WL_PNO((">>> REPORTING SCHED SCAN RESULTS \n"));
 		if (!aborted)
 			cfg80211_sched_scan_results(wl->sched_scan_req->wiphy);
