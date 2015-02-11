@@ -237,7 +237,7 @@ struct tf_coarse_page_table *tf_alloc_coarse_page_table(
 				 */
 				coarse_pg_table =
 					&(array->coarse_page_tables[i]);
-				array->ref_count = 1;
+				array->ref_count++;
 			} else {
 				/*
 				 * The other elements are added to the free list
@@ -1226,9 +1226,16 @@ static int tf_send_recv(struct tf_comm *comm,
 	bool wait_prepared = false;
 	enum TF_COMMAND_STATE command_status = TF_COMMAND_STATE_PENDING;
 	DEFINE_WAIT(wait);
-
+#ifdef CONFIG_FREEZER
+	unsigned long saved_flags;
+#endif
 	dprintk(KERN_INFO "[pid=%d] tf_send_recv(%p)\n",
 		 current->pid, command);
+
+#ifdef CONFIG_FREEZER
+	saved_flags = current->flags;
+	current->flags |= PF_FREEZER_NOSIG;
+#endif
 
 	/*
 	 * Read all answers from the answer queue
@@ -1244,8 +1251,13 @@ copy_answers:
 	wake_up(&(comm->wait_queue));
 
 #ifdef CONFIG_FREEZER
-	if (try_to_freeze()) {
-		recalc_sigpending();
+	if (unlikely(freezing(current))) {
+
+		dprintk(KERN_INFO
+			"Entering refrigerator.\n");
+		refrigerator();
+		dprintk(KERN_INFO
+			"Left refrigerator.\n");
 		goto copy_answers;
 	}
 #endif
@@ -1392,6 +1404,11 @@ exit:
 		finish_wait(&comm->wait_queue, &wait);
 		wait_prepared = false;
 	}
+
+#ifdef CONFIG_FREEZER
+	current->flags &= ~(PF_FREEZER_NOSIG);
+	current->flags |= (saved_flags & PF_FREEZER_NOSIG);
+#endif
 
 	return result;
 }
