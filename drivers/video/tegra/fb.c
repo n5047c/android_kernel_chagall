@@ -524,10 +524,8 @@ struct tegra_fb_info *tegra_fb_register(struct nvhost_device *ndev,
 		tegra_fb->valid = true;
 	}
 
-	stride = tegra_dc_get_stride(dc, 0);
-	if (!stride) /* default to pad the stride to 16-byte boundary. */
-		stride = round_up(info->fix.line_length,
-			TEGRA_LINEAR_PITCH_ALIGNMENT);
+	stride = fb_data->xres * fb_data->bits_per_pixel / 8;
+	stride = round_up(stride, TEGRA_LINEAR_PITCH_ALIGNMENT);
 
 	info->fbops = &tegra_fb_ops;
 	info->pseudo_palette = pseudo_palette;
