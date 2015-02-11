@@ -634,7 +634,7 @@ static int tegra_ep_disable(struct usb_ep *_ep)
 	ep_num = ep_index(ep);
 
 	/* Touch the registers if cable is connected and phy is on */
-	if (vbus_enabled(udc)) {
+	if (udc->vbus_active) {
 		epctrl = udc_readl(udc, EP_CONTROL_REG_OFFSET + (ep_num * 4));
 		if (ep_is_in(ep))
 			epctrl &= ~EPCTRL_TX_ENABLE;
@@ -994,7 +994,7 @@ static int tegra_ep_dequeue(struct usb_ep *_ep, struct usb_request *_req)
 	ep_num = ep_index(ep);
 
 	/* Touch the registers if cable is connected and phy is on */
-	if (vbus_enabled(udc)) {
+	if (udc->vbus_active) {
 		epctrl = udc_readl(udc, EP_CONTROL_REG_OFFSET + (ep_num * 4));
 		if (ep_is_in(ep))
 			epctrl &= ~EPCTRL_TX_ENABLE;
@@ -1045,7 +1045,7 @@ static int tegra_ep_dequeue(struct usb_ep *_ep, struct usb_request *_req)
 	/* Enable EP */
 out:
 	/* Touch the registers if cable is connected and phy is on */
-	if (vbus_enabled(udc)) {
+	if (udc->vbus_active) {
 		epctrl = udc_readl(udc, EP_CONTROL_REG_OFFSET + (ep_num * 4));
 		if (ep_is_in(ep))
 			epctrl |= EPCTRL_TX_ENABLE;
@@ -1167,7 +1167,7 @@ static void tegra_ep_fifo_flush(struct usb_ep *_ep)
 		bits = 1 << ep_num;
 
 	/* Touch the registers if cable is connected and phy is on */
-	if (!vbus_enabled(udc))
+	if (!udc->vbus_active)
 		return;
 
 	timeout = jiffies + UDC_FLUSH_TIMEOUT_MS;
@@ -2304,7 +2304,7 @@ static int tegra_udc_start(struct usb_gadget_driver *driver,
 	udc->usb_state = USB_STATE_ATTACHED;
 	udc->ep0_state = WAIT_FOR_SETUP;
 	udc->ep0_dir = 0;
-	udc->vbus_active = vbus_enabled(udc);
+	udc->vbus_active = 1;
 
 	printk(KERN_INFO "%s: bind to driver %s\n",
 			udc->gadget.name, driver->driver.name);
