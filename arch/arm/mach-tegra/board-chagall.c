@@ -266,6 +266,7 @@ static noinline void __init chagall_setup_bluesleep(void)
 static __initdata struct tegra_clk_init_table chagall_clk_init_table[] = {
 	/* name		parent		rate		enabled */
 	{ "pll_m",	NULL,		0,		false},
+	{ "pll_a",	NULL,		564480000,	true},
 	{ "hda",	"pll_p",	108000000,	false},
 	{ "hda2codec_2x","pll_p",	48000000,	false},
 	{ "pwm",	"pll_p",	6375000,	true},
