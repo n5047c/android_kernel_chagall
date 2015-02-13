@@ -1185,9 +1185,7 @@ static __devinit int tegra_wm8903_driver_probe(struct platform_device *pdev)
 
 	if (machine_is_chagall()) {
 		regulator_enable(machine->dmic_reg);
-	}
 
-	if (machine_is_chagall()) {
 		machine->amic_reg = regulator_get(&pdev->dev, "vdd_amic");
 		if (IS_ERR(machine->amic_reg)) {
 			dev_info(&pdev->dev, "No analog mic regulator found\n");
@@ -1195,14 +1193,7 @@ static __devinit int tegra_wm8903_driver_probe(struct platform_device *pdev)
 		}
 	}
 
-	if (machine_is_cardhu()) {
-		tegra_wm8903_dai[0].codec_name = "wm8903.0-001a",
-		tegra_wm8903_dai[0].cpu_dai_name = "tegra30-i2s.1";
-
-		tegra_wm8903_dai[1].cpu_dai_name = "tegra30-spdif";
-
-		tegra_wm8903_dai[2].cpu_dai_name = "tegra30-i2s.3";
-	} else if (machine_is_chagall()) {
+	if (machine_is_cardhu() || machine_is_chagall()) {
 		tegra_wm8903_dai[0].codec_name = "wm8903.0-001a",
 		tegra_wm8903_dai[0].cpu_dai_name = "tegra30-i2s.1";
 
