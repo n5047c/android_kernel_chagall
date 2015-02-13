@@ -204,7 +204,7 @@ static struct tps6591x_regulator_platform_data pdata_##_name##_##_sname = \
 }
 
 TPS_PDATA_INIT(vdd1,    chagall,  600, 1500, 0, 1, 1, 0, -1, 1, 1, EXT_CTRL_SLEEP_OFF, 0, true);
-TPS_PDATA_INIT(vdd2,    chagall,  600, 1500, 0, 1, 1, 0, -1, 0, 0, 0, 0, false);
+TPS_PDATA_INIT(vdd2,    chagall,  600, 1500, 0, 0, 1, 0, -1, 0, 0, 0, 0, false);
 TPS_PDATA_INIT(vddctrl, chagall, 600,  1400, 0, 1, 1, 0, -1, 0, 0, EXT_CTRL_EN1, 0, true);
 TPS_PDATA_INIT(vio,     chagall, 1500, 3300, 0, 1, 1, 0, -1, 0, 0, 0, 0, false);
 TPS_PDATA_INIT(ldo1,    chagall, 1000, 3300, tps6591x_rails(VDD_2), 1, 0, 0, 3200, 1, 1, 0, 0, true);
