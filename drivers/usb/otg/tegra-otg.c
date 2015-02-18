@@ -374,7 +374,7 @@ static ssize_t store_host_en(struct device *dev, struct device_attribute *attr,
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct tegra_otg_data *tegra = platform_get_drvdata(pdev);
-	unsigned long host;
+	unsigned int host;
 
 	if (sscanf(buf, "%d", &host) != 1 || host < 0 || host > 1)
 		return -EINVAL;
