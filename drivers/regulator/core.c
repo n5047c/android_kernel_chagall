@@ -839,7 +839,7 @@ static void print_constraints(struct regulator_dev *rdev)
 	if (constraints->valid_modes_mask & REGULATOR_MODE_STANDBY)
 		count += sprintf(buf + count, "standby");
 
-	rdev_dbg(rdev, "%s\n", buf);
+	rdev_info(rdev, "%s\n", buf);
 }
 
 static int machine_constraints_voltage(struct regulator_dev *rdev,
@@ -1011,7 +1011,7 @@ static int set_supply(struct regulator_dev *rdev,
 {
 	int err;
 
-	rdev_dbg(rdev, "supplied by %s\n", rdev_get_name(supply_rdev));
+	rdev_info(rdev, "supplied by %s\n", rdev_get_name(supply_rdev));
 
 	rdev->supply = create_regulator(supply_rdev, &rdev->dev, "SUPPLY");
 	if (IS_ERR(rdev->supply)) {
@@ -1748,14 +1748,14 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
 				     NULL);
 
 	if (rdev->desc->ops->set_voltage) {
-		selector = -1;
 		ret = rdev->desc->ops->set_voltage(rdev, min_uV, max_uV,
 						   &selector);
 
-		if (selector != -1)
-			if (rdev->desc->ops->list_voltage)
-				selector = rdev->desc->ops->list_voltage(rdev,
+		if (rdev->desc->ops->list_voltage)
+			selector = rdev->desc->ops->list_voltage(rdev,
 								 selector);
+		else
+			selector = -1;
 	} else if (rdev->desc->ops->set_voltage_sel) {
 		int best_val = INT_MAX;
 		int i;
@@ -2654,6 +2654,7 @@ struct regulator_dev *regulator_register(struct regulator_desc *regulator_desc,
 	static atomic_t regulator_no = ATOMIC_INIT(0);
 	struct regulator_dev *rdev;
 	int ret, i;
+	const char *supply = NULL;
 
 	if (regulator_desc == NULL)
 		return ERR_PTR(-EINVAL);
@@ -2728,21 +2729,24 @@ struct regulator_dev *regulator_register(struct regulator_desc *regulator_desc,
 	if (ret < 0)
 		goto scrub;
 
-	if (init_data->supply_regulator) {
+	if (init_data->supply_regulator)
+		supply = init_data->supply_regulator;
+	else if (regulator_desc->supply_name)
+		supply = regulator_desc->supply_name;
+
+	if (supply) {
 		struct regulator_dev *r;
 		int found = 0;
 
 		list_for_each_entry(r, &regulator_list, list) {
-			if (strcmp(rdev_get_name(r),
-				   init_data->supply_regulator) == 0) {
+			if (strcmp(rdev_get_name(r), supply) == 0) {
 				found = 1;
 				break;
 			}
 		}
 
 		if (!found) {
-			dev_err(dev, "Failed to find supply %s\n",
-				init_data->supply_regulator);
+			dev_err(dev, "Failed to find supply %s\n", supply);
 			ret = -ENODEV;
 			goto scrub;
 		}
