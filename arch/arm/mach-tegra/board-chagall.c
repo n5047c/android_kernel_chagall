@@ -41,6 +41,7 @@
 
 #include <sound/wm8903.h>
 #include <media/tegra_dtv.h>
+#include <media/tegra_camera.h>
 
 #include <mach/clk.h>
 #include <mach/iomap.h>
@@ -569,10 +570,27 @@ static void __init chagall_uart_init(void)
 				ARRAY_SIZE(chagall_uart_devices));
 }
 
+static struct tegra_camera_platform_data tegra_camera_pdata = {
+	.limit_3d_emc_clk = false,
+};
+
 static struct platform_device tegra_camera = {
 	.name = "tegra_camera",
+	.dev = {
+		.platform_data = &tegra_camera_pdata,
+	},
 	.id = -1,
 };
+
+static void tegra_camera_init(void)
+{
+	/* For AP37 platform, limit 3d and emc freq when camera is ON */
+	if (TEGRA_REVISION_A03 == tegra_get_revision() &&
+		0xA0 == tegra_sku_id())
+		tegra_camera_pdata.limit_3d_emc_clk = true;
+	else
+		tegra_camera_pdata.limit_3d_emc_clk = false;
+}
 
 #ifdef CONFIG_SPI
 static struct platform_device *chagall_spi_devices[] __initdata = {
@@ -1139,6 +1157,7 @@ static void __init tegra_chagall_init(void)
 	chagall_edp_init();
 #endif
 	chagall_uart_init();
+	tegra_camera_init();
 	platform_add_devices(chagall_devices, ARRAY_SIZE(chagall_devices));
 	tegra_ram_console_debug_init();
 	tegra_io_dpd_init();
