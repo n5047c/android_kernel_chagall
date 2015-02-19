@@ -30,7 +30,6 @@
 #include <linux/io.h>
 #include <linux/delay.h>
 #include <linux/err.h>
-#include <linux/wakelock.h>
 
 #define USB_PHY_WAKEUP		0x408
 #define  USB_ID_INT_EN		(1 << 0)
@@ -65,7 +64,6 @@ struct tegra_otg_data {
 	bool interrupt_mode;
 	bool builtin_host;
 	bool suspended;
-	struct wake_lock wake_lock;
 };
 
 static struct tegra_otg_data *tegra_clone;
@@ -182,6 +180,12 @@ static void tegra_stop_host(struct tegra_otg_data *tegra)
 	DBG("%s(%d) End\n", __func__, __LINE__);
 }
 
+static void tegra_otg_notify_event(struct otg_transceiver *otg,
+					enum usb_xceiv_events event)
+{
+	otg->last_event = event;
+	atomic_notifier_call_chain(&otg->notifier, event, NULL);
+}
 
 static void tegra_change_otg_state(struct tegra_otg_data *tegra,
 				enum usb_otg_state to)
@@ -204,33 +208,22 @@ static void tegra_change_otg_state(struct tegra_otg_data *tegra,
 
 		if (from == OTG_STATE_A_SUSPEND) {
 			if (to == OTG_STATE_B_PERIPHERAL && otg->gadget) {
-				wake_lock(&tegra->wake_lock);
 				usb_gadget_vbus_connect(otg->gadget);
-			} else if (to == OTG_STATE_A_HOST) {
-				wake_lock(&tegra->wake_lock);
+				tegra_otg_notify_event(otg, USB_EVENT_VBUS);
+			}
+			else if (to == OTG_STATE_A_HOST) {
 				tegra_start_host(tegra);
+				tegra_otg_notify_event(otg, USB_EVENT_ID);
 			}
 		} else if (from == OTG_STATE_A_HOST) {
 			if (to == OTG_STATE_A_SUSPEND) {
 				tegra_stop_host(tegra);
-				wake_unlock(&tegra->wake_lock);
+				tegra_otg_notify_event(otg, USB_EVENT_NONE);
 			}
 		} else if (from == OTG_STATE_B_PERIPHERAL && otg->gadget) {
 			if (to == OTG_STATE_A_SUSPEND) {
 				usb_gadget_vbus_disconnect(otg->gadget);
-				wake_unlock(&tegra->wake_lock);
-			} else if (to == OTG_STATE_A_HOST) {
-				printk(KERN_ERR "**** Wrong state transition !!! \n");
-				printk(KERN_ERR "**** First force from PERIPHERAL to SUSPEND\n");
-				to = OTG_STATE_A_SUSPEND;
-				otg->state = to;
-				usb_gadget_vbus_disconnect(otg->gadget);
-				mdelay(1);
-
-				printk(KERN_ERR "**** Then force from SUSPEND to HOST\n");
-				to = OTG_STATE_A_HOST;
-				otg->state = to;
-				tegra_start_host(tegra);
+				tegra_otg_notify_event(otg, USB_EVENT_NONE);
 			}
 		}
 	}
@@ -420,7 +413,6 @@ static int tegra_otg_probe(struct platform_device *pdev)
 	tegra->otg.set_power = tegra_otg_set_power;
 	spin_lock_init(&tegra->lock);
 	mutex_init(&tegra->irq_work_mutex);
-	wake_lock_init(&tegra->wake_lock, WAKE_LOCK_SUSPEND, "tegra_otg");
 
 	if (pdata) {
 		tegra->builtin_host = !pdata->ehci_pdata->builtin_host_disabled;
@@ -478,12 +470,14 @@ static int tegra_otg_probe(struct platform_device *pdev)
 		goto err_irq;
 	}
 
-	err = enable_irq_wake(tegra->irq);
-	if (err < 0) {
-		dev_warn(&pdev->dev,
-			"Couldn't enable USB otg mode wakeup, irq=%d, error=%d\n",
-			tegra->irq, err);
-		err = 0;
+	if (pdata->ehci_pdata->u_data.host.remote_wakeup_supported) {
+		err = enable_irq_wake(tegra->irq);
+		if (err < 0) {
+			dev_warn(&pdev->dev,
+				"Couldn't enable USB otg mode wakeup,"
+				" irq=%d, error=%d\n", tegra->irq, err);
+			err = 0;
+		}
 	}
 
 	INIT_WORK(&tegra->work, irq_work);
@@ -509,7 +503,6 @@ err_io:
 err_clken:
 	clk_put(tegra->clk);
 err_clk:
-	wake_lock_destroy(&tegra->wake_lock);
 	platform_set_drvdata(pdev, NULL);
 	kfree(tegra);
 	return err;
@@ -524,7 +517,6 @@ static int __exit tegra_otg_remove(struct platform_device *pdev)
 	iounmap(tegra->regs);
 	clk_disable(tegra->clk);
 	clk_put(tegra->clk);
-	wake_lock_destroy(&tegra->wake_lock);
 	platform_set_drvdata(pdev, NULL);
 	mutex_destroy(&tegra->irq_work_mutex);
 	kfree(tegra);
@@ -592,7 +584,6 @@ static void tegra_otg_resume(struct device *dev)
 
 	spin_unlock_irqrestore(&tegra->lock, flags);
 	schedule_work(&tegra->work);
-
 	enable_interrupt(tegra, true);
 
 	tegra->suspended = false;
