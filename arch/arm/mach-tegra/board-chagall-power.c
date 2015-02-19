@@ -684,12 +684,12 @@ static struct tegra_suspend_platform_data chagall_suspend_data = {
 	.board_suspend = chagall_board_suspend,
 	.board_resume = chagall_board_resume,
 #ifdef CONFIG_TEGRA_LP1_950
-	.lp1_lowvolt_support = true,
-	.i2c_base_addr = TEGRA_I2C5_BASE,
-	.pmuslave_addr = 0x24,
-	.core_reg_addr = 0x5B,
-	.lp1_core_volt_low = 0x1D,
-	.lp1_core_volt_high = 0x33,
+	.lp1_lowvolt_support = false,
+	.i2c_base_addr = 0,
+	.pmuslave_addr = 0,
+	.core_reg_addr = 0,
+	.lp1_core_volt_low = 0,
+	.lp1_core_volt_high = 0,
 #endif
 };
 
