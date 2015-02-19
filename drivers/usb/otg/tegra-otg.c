@@ -54,6 +54,7 @@ struct tegra_otg_data {
 	struct otg_transceiver otg;
 	unsigned long int_status;
 	spinlock_t lock;
+	struct mutex irq_work_mutex;
 	void __iomem *regs;
 	struct clk *clk;
 	int irq;
@@ -240,12 +241,15 @@ static void irq_work(struct work_struct *work)
 	struct tegra_otg_data *tegra =
 		container_of(work, struct tegra_otg_data, work);
 	struct otg_transceiver *otg = &tegra->otg;
-	enum usb_otg_state from = otg->state;
+	enum usb_otg_state from;
 	enum usb_otg_state to = OTG_STATE_UNDEFINED;
 	unsigned long flags;
 	unsigned long status;
 
+	mutex_lock(&tegra->irq_work_mutex);
+
 	spin_lock_irqsave(&tegra->lock, flags);
+	from = otg->state;
 	status = tegra->int_status;
 
 	/* Debug prints */
@@ -269,6 +273,7 @@ static void irq_work(struct work_struct *work)
 
 	spin_unlock_irqrestore(&tegra->lock, flags);
 	tegra_change_otg_state(tegra, to);
+	mutex_unlock(&tegra->irq_work_mutex);
 }
 
 static irqreturn_t tegra_otg_irq(int irq, void *data)
@@ -414,6 +419,7 @@ static int tegra_otg_probe(struct platform_device *pdev)
 	tegra->otg.set_suspend = tegra_otg_set_suspend;
 	tegra->otg.set_power = tegra_otg_set_power;
 	spin_lock_init(&tegra->lock);
+	mutex_init(&tegra->irq_work_mutex);
 	wake_lock_init(&tegra->wake_lock, WAKE_LOCK_SUSPEND, "tegra_otg");
 
 	if (pdata) {
@@ -520,6 +526,7 @@ static int __exit tegra_otg_remove(struct platform_device *pdev)
 	clk_put(tegra->clk);
 	wake_lock_destroy(&tegra->wake_lock);
 	platform_set_drvdata(pdev, NULL);
+	mutex_destroy(&tegra->irq_work_mutex);
 	kfree(tegra);
 
 	return 0;
@@ -532,6 +539,8 @@ static int tegra_otg_suspend(struct device *dev)
 	struct tegra_otg_data *tegra = platform_get_drvdata(pdev);
 	struct otg_transceiver *otg = &tegra->otg;
 	int val;
+
+	mutex_lock(&tegra->irq_work_mutex);
 	DBG("%s(%d) BEGIN state : %s\n", __func__, __LINE__,
 					tegra_state_name(otg->state));
 
@@ -548,6 +557,7 @@ static int tegra_otg_suspend(struct device *dev)
 	tegra->suspended = true;
 
 	DBG("%s(%d) END\n", __func__, __LINE__);
+	mutex_unlock(&tegra->irq_work_mutex);
 	return 0;
 }
 
@@ -559,8 +569,11 @@ static void tegra_otg_resume(struct device *dev)
 	unsigned long flags;
 	DBG("%s(%d) BEGIN\n", __func__, __LINE__);
 
-	if (!tegra->suspended)
+	mutex_lock(&tegra->irq_work_mutex);
+	if (!tegra->suspended) {
+		mutex_unlock(&tegra->irq_work_mutex);
 		return;
+	}
 
 	/* Clear pending interrupts */
 	clk_enable(tegra->clk);
@@ -585,6 +598,7 @@ static void tegra_otg_resume(struct device *dev)
 	tegra->suspended = false;
 
 	DBG("%s(%d) END\n", __func__, __LINE__);
+	mutex_unlock(&tegra->irq_work_mutex);
 }
 
 static const struct dev_pm_ops tegra_otg_pm_ops = {
