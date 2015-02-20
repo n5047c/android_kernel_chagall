@@ -40,6 +40,7 @@
 #include <linux/nvmap.h>
 #include <linux/console.h>
 
+
 #include "host/dev.h"
 #include "nvmap/nvmap.h"
 #include "dc/dc_priv.h"
@@ -124,10 +125,10 @@ static int tegra_fb_set_par(struct fb_info *info)
 		default:
 			return -EINVAL;
 		}
+		/* if line_length unset, then pad the stride */
 		info->fix.line_length = var->xres * var->bits_per_pixel / 8;
-		/* Pad the stride to 16-byte boundary. */
 		info->fix.line_length = round_up(info->fix.line_length,
-						TEGRA_LINEAR_PITCH_ALIGNMENT);
+					TEGRA_LINEAR_PITCH_ALIGNMENT);
 		tegra_fb->win->stride = info->fix.line_length;
 		tegra_fb->win->stride_uv = 0;
 		tegra_fb->win->phys_addr_u = 0;
@@ -170,6 +171,7 @@ static int tegra_fb_set_par(struct fb_info *info)
 #else
 					FB_VMODE_STEREO_LEFT_RIGHT);
 #endif
+
 		/* Configure DC with new mode */
 		if (tegra_dc_set_fb_mode(dc, info->mode, stereo)) {
 			/* Error while configuring DC, fallback to old mode */
@@ -351,7 +353,6 @@ static void tegra_fb_imageblit(struct fb_info *info,
 static int tegra_fb_ioctl(struct fb_info *info, unsigned int cmd, unsigned long arg)
 {
 	struct tegra_fb_info *tegra_fb = (struct tegra_fb_info *)info->par;
-	struct tegra_dc *dc = tegra_fb->win->dc;
 	struct tegra_fb_modedb modedb;
 	struct fb_modelist *modelist;
 	struct fb_vblank vblank = {};
@@ -374,8 +375,6 @@ static int tegra_fb_ioctl(struct fb_info *info, unsigned int cmd, unsigned long 
 			memset(&var, 0x0, sizeof(var));
 
 			fb_videomode_to_var(&var, &modelist->mode);
-			var.width = tegra_dc_get_out_width(dc);
-			var.height = tegra_dc_get_out_height(dc);
 
 			if (copy_to_user((void __user *)&modedb.modedb[i],
 					 &var, sizeof(var)))
@@ -417,11 +416,7 @@ static int tegra_fb_ioctl(struct fb_info *info, unsigned int cmd, unsigned long 
 	return 0;
 }
 
-int tegra_fb_get_mode(struct tegra_dc *dc)
-{
-	if (!dc->fb->info->mode)
-		return -1;
-
+int tegra_fb_get_mode(struct tegra_dc *dc) {
 	return dc->fb->info->mode->refresh;
 }
 
@@ -491,7 +486,7 @@ const struct fb_videomode *tegra_fb_find_best_mode(
 				diff = d;
 				best = mode;
 			} else if (diff == d && best &&
-					mode->refresh > best->refresh)
+				   mode->refresh > best->refresh)
 				best = mode;
 		}
 	}
@@ -651,7 +646,6 @@ struct tegra_fb_info *tegra_fb_register(struct nvhost_device *ndev,
 	info->fix.accel		= FB_ACCEL_NONE;
 	info->fix.smem_start	= fb_phys;
 	info->fix.smem_len	= fb_size;
-	info->fix.line_length = fb_data->xres * fb_data->bits_per_pixel / 8;
 	info->fix.line_length = stride;
 
 	info->var.xres			= fb_data->xres;
@@ -670,7 +664,6 @@ struct tegra_fb_info *tegra_fb_register(struct nvhost_device *ndev,
 	info->var.hsync_len		= 0;
 	info->var.vsync_len		= 0;
 	info->var.vmode			= FB_VMODE_NONINTERLACED;
-	info->var.reserved[3] = 60;
 
 	win->x.full = dfixed_const(0);
 	win->y.full = dfixed_const(0);
