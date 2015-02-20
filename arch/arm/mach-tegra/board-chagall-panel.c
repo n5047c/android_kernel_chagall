@@ -581,7 +581,11 @@ static struct tegra_fb_data chagall_fb_data = {
 	.win		= 0,
 	.xres		= 1280,
 	.yres		= 800,
+#ifdef CONFIG_TEGRA_DC_USE_HW_BPP
+	.bits_per_pixel = -1,
+#else
 	.bits_per_pixel	= 32,
+#endif
 	.flags		= TEGRA_FB_FLIP_ON_PROBE,
 };
 #endif
@@ -590,7 +594,11 @@ static struct tegra_fb_data chagall_hdmi_fb_data = {
 	.win		= 0,
 	.xres		= 640,
 	.yres		= 480,
+#ifdef CONFIG_TEGRA_DC_USE_HW_BPP
+	.bits_per_pixel = -1,
+#else
 	.bits_per_pixel	= 32,
+#endif
 	.flags		= TEGRA_FB_FLIP_ON_PROBE,
 };
 
