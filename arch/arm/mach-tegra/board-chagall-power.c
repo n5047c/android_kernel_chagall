@@ -508,6 +508,10 @@ static struct regulator_consumer_supply fixed_reg_en_vddio_vid_oc_supply[] = {
 	REGULATOR_SUPPLY("vdd_5v0_vid", NULL),
 };
 
+/* Battery powered rail*/
+static struct regulator_consumer_supply fixed_reg_en_battery_supply[] = {
+	REGULATOR_SUPPLY("usb_vbus", "tegra-ehci.1"),
+};
 
 /* EN_1V8_DMIC */
 static struct regulator_consumer_supply fixed_reg_en_1v8_dmic_supply[] = {
@@ -592,6 +596,7 @@ FIXED_REG(18, en_usb1_vbus_oc, en_usb1_vbus_oc, FIXED_SUPPLY(en_5v0_sys), 0, 0, 
 FIXED_REG(19, en_usb3_vbus_oc, en_usb3_vbus_oc, FIXED_SUPPLY(en_5v0_sys), 0, 0, TEGRA_GPIO_PCC6, true,  0, 5000);
 FIXED_REG(20, en_1v8_dmic,     en_1v8_dmic,     tps6591x_rails(VIO),      0, 0, TEGRA_GPIO_PX0,  true,  0, 1800);
 FIXED_REG(21, en_3v8_3g_buck,  en_3v8_3g_buck,  NULL,                     0, 0, TEGRA_GPIO_PK7,  true,  0, 3800);
+FIXED_REG(22, en_battery,      en_battery,      NULL,           1, 1, -1,     true,   1, 5000);
 FIXED_REG(25, en_5v0_amic,     en_5v0_amic,     tps6591x_rails(VIO),  0, 0, TEGRA_GPIO_PO1,  false,  0, 1800);
 
 /*
@@ -623,6 +628,7 @@ static struct platform_device *fixed_reg_devs_chagall_mp[] = {
 	ADD_FIXED_REG(en_usb3_vbus_oc),
 	ADD_FIXED_REG(en_1v8_dmic),
 	ADD_FIXED_REG(en_3v8_3g_buck),
+	ADD_FIXED_REG(en_battery),
 	ADD_FIXED_REG(en_5v0_amic),
 };
 
