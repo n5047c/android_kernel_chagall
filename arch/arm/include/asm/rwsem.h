@@ -56,7 +56,7 @@ static inline void __down_read(struct rw_semaphore *sem)
 
 static inline int __down_read_trylock(struct rw_semaphore *sem)
 {
-	int tmp;
+	long tmp;
 
 	while ((tmp = atomic_long_read((atomic_long_t *)&sem->count)) >= 0) {
 		if (tmp == cmpxchg(&sem->count, tmp,
