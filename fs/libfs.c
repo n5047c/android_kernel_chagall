@@ -925,7 +925,6 @@ int generic_file_fsync(struct file *file, loff_t start, loff_t end,
 
 	if (ret == 0)
 		ret = err;
-out:
 	mutex_unlock(&inode->i_mutex);
 	return ret;
 }
