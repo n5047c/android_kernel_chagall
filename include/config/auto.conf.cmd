@@ -32,6 +32,7 @@ deps_config := \
 	net/sunrpc/Kconfig \
 	fs/nfsd/Kconfig \
 	fs/nfs/Kconfig \
+	fs/f2fs/Kconfig \
 	fs/exofs/Kconfig \
 	fs/ufs/Kconfig \
 	fs/sysv/Kconfig \
