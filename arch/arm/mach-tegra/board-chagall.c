@@ -121,7 +121,7 @@ static void chagall_i2c_bus_reset_devices_gen1(struct tegra_i2c_platform_data *p
 
 static bool is_wifi_sku = false;
 static char *rck = 0;
-static bool is_goodix = true;
+static bool is_goodix = false;
 
 
 static struct balanced_throttle throttle_list[] = {
@@ -877,7 +877,7 @@ static int __init chagall_touch_init(void)
 
         tegra_get_board_info(&BoardInfo);
 
-        if ((BoardInfo.sku & SKU_TOUCH_MASK) == SKU_TOUCH_M532) {
+        if (is_goodix == false && (BoardInfo.sku & SKU_TOUCH_MASK) == SKU_TOUCH_M532) {
 		ret = gpio_request(TEGRA_GPIO_PH6, "atmel-reset");
 		if (ret < 0)
 		    pr_err("%s(): gpio request() fails for gpio %d (touch-reset)\n",
